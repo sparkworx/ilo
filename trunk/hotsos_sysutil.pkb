@@ -582,6 +582,8 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
    --
    ---------------------------------------------------------------------
    PROCEDURE register(p_name IN varchar2) IS
+     -- This call may perform an implicit commit
+     PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN
       dbms_alert.register(p_name);
    EXCEPTION
@@ -602,6 +604,8 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
    --
    ---------------------------------------------------------------------
    PROCEDURE waitany(p_name OUT varchar2, p_message OUT varchar2, p_status OUT number, p_timeout IN number) IS
+     -- This call may perform an implicit commit
+     PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN
       dbms_alert.WAITANY(p_name, p_message, p_status, p_timeout);
    EXCEPTION
@@ -621,6 +625,8 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
    --
    ---------------------------------------------------------------------
    PROCEDURE waitone(p_name IN varchar2, p_message OUT varchar2, p_status OUT number, p_timeout IN number) IS
+     -- This call may perform an implicit commit
+     PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN
       dbms_alert.waitone(p_name, p_message, p_status, p_timeout);
    EXCEPTION
@@ -640,6 +646,8 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
    --
    ---------------------------------------------------------------------
    PROCEDURE SIGNAL (p_name IN varchar2, p_message IN varchar2) IS
+     -- This call may perform an implicit commit
+     PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN 
       dbms_alert.signal(p_name, p_message);
    EXCEPTION
@@ -659,6 +667,8 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
    --
    ---------------------------------------------------------------------
    PROCEDURE remove (p_name IN varchar2) IS
+     -- This call may perform an implicit commit
+     PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN
       dbms_alert.remove(p_name);
    EXCEPTION
@@ -678,6 +688,8 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
    --
    ---------------------------------------------------------------------
    PROCEDURE removeall IS
+     -- This call always performs an implicit commit
+     PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN
       dbms_alert.removeall;
    EXCEPTION
