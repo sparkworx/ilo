@@ -231,7 +231,6 @@ show errors;
 PROMPT ... Granting EXECUTE privs on HOTSOS_* to PUBLIC
 grant execute on HOTSOS_ILO_TASK to PUBLIC;
 grant execute on HOTSOS_ILO_TIMER to PUBLIC;
-grant execute on HOTSOS_SYSUTIL to PUBLIC;
 PROMPT
 PROMPT =========================================================================
 PROMPT Installation of HOTSOS ILO complete.
