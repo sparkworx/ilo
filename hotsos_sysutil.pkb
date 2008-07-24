@@ -646,8 +646,7 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
    --
    ---------------------------------------------------------------------
    PROCEDURE SIGNAL (p_name IN varchar2, p_message IN varchar2) IS
-     -- This call may perform an implicit commit
-     PRAGMA AUTONOMOUS_TRANSACTION;
+     -- This call must be committed by caller, can not be autonomous
    BEGIN 
       dbms_alert.signal(p_name, p_message);
    EXCEPTION
