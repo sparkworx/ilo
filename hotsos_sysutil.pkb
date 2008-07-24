@@ -38,9 +38,9 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
    ---------------------------------------------------------------------
    --< PRIVATE TYPES AND GLOBALS >--------------------------------------
    ---------------------------------------------------------------------
-   g_db_major_ver  VARCHAR2(5);
-   g_db_prod       VARCHAR2(15);
-   g_db_ver        VARCHAR2(64);
+   g_db_major_ver  VARCHAR2(5)  := '&&g_db_major_ver';
+   g_db_prod       VARCHAR2(15) := '&&g_db_prod';
+   g_db_ver        VARCHAR2(64) := '&&g_db_ver';
    g_spid          VARCHAR2(12);
    g_session_type  VARCHAR2(255);
    g_instance_name VARCHAR2(255);
@@ -60,7 +60,7 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
    ---------------------------------------------------------------------
    --  Purpose: We make decisions what calls will be executed based on
    --           version of the database. Incorporating into util so that
-   --           we only need to do thisonceper session and therefore
+   --           we only need to do this once per session and therefore
    --           reduce the executions over and over.
    --
    --  Comments:
