@@ -72,6 +72,41 @@ rem create the tnsalias subst variable for usage in connect later on
 column tempalias new_value tnsalias
 select :tnsalias tempalias from dual;
 
+rem get the database version for use in HOTSOS_SYSUTIL package
+VARIABLE g_db_major_ver varchar2(64);
+VARIABLE g_db_prod varchar2(64);
+VARIABLE g_db_ver varchar2(64);
+
+DECLARE
+   v_db_ver            VARCHAR2(64);
+   v_compat_ver        VARCHAR2(64);
+   v_db_major          VARCHAR2(5);
+   v_db_minor          VARCHAR2(5);
+   v_db_ver_minusmajor VARCHAR2(10);
+   v_idx               PLS_INTEGER;
+   v_del               VARCHAR2(2) := '.';
+BEGIN
+   DBMS_UTILITY.DB_VERSION(v_db_ver, v_compat_ver);
+   v_idx               := INSTR(v_db_ver, v_del);
+   v_db_major          := SUBSTR(v_db_ver, 1, v_idx - 1);
+   v_db_ver_minusmajor := SUBSTR(v_db_ver, v_idx + 1, LENGTH(v_db_ver));
+   v_idx               := INSTR(v_db_ver_minusmajor, v_del);
+   v_db_minor          := SUBSTR(v_db_ver_minusmajor, 1, v_idx - 1);
+   -- Setting the major number
+   :g_db_major_ver := v_db_major;
+   -- Setting the major and minor number as a product number
+   :g_db_prod := v_db_major || '.' || v_db_minor;
+   -- Setting the entire db verion
+   :g_db_ver := v_db_ver;
+END;
+/
+
+column a_db_ver new_value g_db_ver
+column a_db_prod new_value g_db_prod
+column a_db_major_ver new_value g_db_major_ver
+select :g_db_major_ver a_db_major_ver,:g_db_prod a_db_prod,:g_db_ver a_db_ver from dual;
+
+
 select 'start ' || 'hotsos_ilo_hotsosok.sql &&h_user'
 from all_users where upper(username) = upper('&&h_user')
 UNION
