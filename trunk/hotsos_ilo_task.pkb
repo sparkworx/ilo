@@ -792,7 +792,7 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Ilo_Task AS
       RETURN NUMBER
    IS
    BEGIN
-      RETURN 2.0;
+      RETURN &&ilo_version;
    EXCEPTION
       WHEN OTHERS THEN
          if hotsos_sysutil.get_raise_exceptions then 
