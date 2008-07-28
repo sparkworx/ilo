@@ -1,7 +1,22 @@
 Release Notes - Hotsos ILO: 2.1
 
+1998901: Remove unnecessary grants to public (2549)
+      Public execute privilege will no longer be granted on the HOTSOS_SYSUTIL package during
+      installation.
+      
+1998871: Persist database version and others (3052)
+      The database version is now determined at installation and stored in package globals. 
+      If a database upgrade is done, HOTSOS_ILO should be modified manually (in HOTSOS_SYSUTIL
+      package), or reinstalled from scratch.
+
+1998857: Use autonomous transactions to avoid implicit commits (2190)
+      The DBMS_ALERT functions which are wrapped in HOTSOS_SYSUTIL are now wrapped with
+      the PRAGMA AUTONOMOUS_TRANSACTION to avoid implicit commits being passed along
+      to the calling application. These functions were called only by the SLA Manager
+      extension, which wrapped them in the calls, but the pragmas belong at this level.
+
 1917: Installation will now fail immediately if unable to grant privileges on SYS packages
-      to avoid creating HOTSOS_SYSUTIL which won't compile
+      to avoid creating HOTSOS_SYSUTIL which won't compile.
       
 Release Notes - Hotsos ILO: 2.0
 
