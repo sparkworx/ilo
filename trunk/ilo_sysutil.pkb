@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
+CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
    ---------------------------------------------------------------------
    -- Provides several utility functions and wraps calls to SYS.DBMS_SYSTEM.KSDDDT and SYS.DBMS_SYSTEM.KSDWRT.
    ---------------------------------------------------------------------
@@ -97,7 +97,7 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
    --< get_version >
    ---------------------------------------------------------------------
    --
-   --  Purpose: Returns the version of the HOTSOS_SYSUTIL package
+   --  Purpose: Returns the version of the ILO_SYSUTIL package
    --
    --   %return NUMBER	  NUMBER value that indicates version of ILO
    ---------------------------------------------------------------------
@@ -108,7 +108,7 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
       RETURN &&ilo_version;
    EXCEPTION
       WHEN OTHERS THEN
-         if hotsos_sysutil.get_raise_exceptions then 
+         if ilo_sysutil.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -744,4 +744,4 @@ CREATE OR REPLACE PACKAGE BODY Hotsos_Sysutil AS
          RETURN FALSE;
    END get_raise_exceptions;
 
-END Hotsos_Sysutil;
+END Ilo_Sysutil;

@@ -1,4 +1,4 @@
-REM HOTSOS_ILO
+REM ILO
 REM Copyright (c) 2006 - 2008 by Method R Corporation. All rights reserved.
 REM
 REM This library is free software; you can redistribute it and/or
@@ -17,10 +17,12 @@ REM Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 REM
 PROMPT =========================================================================
 PROMPT
-PROMPT This script will UNINSTALL the HOTSOS Oracle Instrumentation Library
+PROMPT This script will UNINSTALL the Instrumentation Library for Oracle
 PROMPT and its associated utilities, including SLA extensions if present.
 PROMPT
 PROMPT Objects Uninstalled:
+PROMPT
+PROMPT * For version 2.0 and earlier
 PROMPT
 PROMPT * Package HOTSOS_SYSUTIL 
 PROMPT * Package HOTSOS_ILO_TASK
@@ -30,6 +32,16 @@ PROMPT
 PROMPT * Public Synonym HOTSOS_SYSUTIL 
 PROMPT * Public Synonym HOTSOS_ILO_TASK
 PROMPT * Public Synonym HOTSOS_ILO_TIMER
+PROMPT
+PROMPT * For version 2.1 and later
+PROMPT
+PROMPT * Package ILO_SYSUTIL 
+PROMPT * Package ILO_TASK
+PROMPT * Package ILO_TIMER
+PROMPT
+PROMPT * Public Synonym ILO_SYSUTIL 
+PROMPT * Public Synonym ILO_TASK
+PROMPT * Public Synonym ILO_TIMER
 PROMPT
 PROMPT * Table ILO_RUN
 PROMPT * Table ILO_SCHEDULE_CACHE
@@ -49,33 +61,33 @@ set define '&'
 set echo off heading off termout off feedback off verify off
 set serveroutput on size 1000000
 
-select 'start ' || decode(user, 'SYS', 'hotsos_ilo_sysok.sql', 'hotsos_ilo_sysnotok.sql')
+select 'start ' || decode(user, 'SYS', 'ilo_sysok.sql', 'ilo_sysnotok.sql')
 from  dual
 
-spool hotsos_ilo_uninstall.tmp
+spool ilo_uninstall.tmp
 /
 spool off
-start hotsos_ilo_uninstall.tmp
+start ilo_uninstall.tmp
 
-ACCEPT h_user char default HOTSOS prompt '*** Please enter the owner of the HOTSOS_ILO packages : [hotsos] '
+ACCEPT h_user char default ILO prompt '*** Please enter the owner of the ILO packages : [ilo] '
 
 set echo off heading off termout off feedback off
-select 'start ' || 'hotsos_ilo_hotsosok.sql &&h_user'
+select 'start ' || 'ilo_userok.sql &&h_user'
 from all_users where upper(username) = upper('&&h_user')
 UNION
-select 'start ' || 'hotsos_ilo_hotsosnotok.sql &&h_user'
+select 'start ' || 'ilo_usernotok.sql &&h_user'
 from dual 
 where not exists (select null from all_users where upper(username) = upper('&&h_user'))
 
-spool hotsos_ilo_uninstall.tmp
+spool ilo_uninstall.tmp
 /
 spool off
-start hotsos_ilo_uninstall.tmp
+start ilo_uninstall.tmp
 
 set termout on feedback on
-spool hotsos_ilo_uninstall.log
+spool ilo_uninstall.log
 PROMPT
--- only drop the system trigger if no other hotsos schema exists
+-- only drop the system trigger if no other ILO schema exists
 declare
   procedure drop_trigger (p_obj varchar2) is
     not_exists exception;
@@ -84,7 +96,7 @@ declare
     for rec in 
       (select null from dual where not exists
         (select null from dba_source
-           where name = 'HOTSOS_ILO_TASK' 
+           where name in ('HOTSOS_ILO_TASK','ILO_TASK') 
              and owner not in ('&&h_user',upper('&&h_user'))
         )
        ) 
@@ -140,6 +152,9 @@ begin
   drop_public_synonym('hotsos_ilo_task');
   drop_public_synonym('hotsos_ilo_timer');
   drop_public_synonym('hotsos_sysutil');
+  drop_public_synonym('ilo_task');
+  drop_public_synonym('ilo_timer');
+  drop_public_synonym('ilo_sysutil');
 end;
 /
 PROMPT
@@ -156,6 +171,21 @@ end;
 /
 begin
   execute immediate 'revoke execute on &&h_user..HOTSOS_SYSUTIL from PUBLIC';
+exception when others then null;
+end;
+/
+begin
+  execute immediate 'revoke execute on &&h_user..ILO_TASK from PUBLIC';
+exception when others then null;
+end;
+/
+begin
+  execute immediate 'revoke execute on &&h_user..ILO_TIMER from PUBLIC';
+exception when others then null;
+end;
+/
+begin
+  execute immediate 'revoke execute on &&h_user..ILO_SYSUTIL from PUBLIC';
 exception when others then null;
 end;
 /
@@ -189,6 +219,9 @@ begin
   drop_package('&&h_user..HOTSOS_ILO_TIMER');
   drop_package('&&h_user..HOTSOS_ILO_TASK');
   drop_package('&&h_user..HOTSOS_SYSUTIL');
+  drop_package('&&h_user..ILO_TIMER');
+  drop_package('&&h_user..ILO_TASK');
+  drop_package('&&h_user..ILO_SYSUTIL');
 end;
 /
 PROMPT
@@ -238,7 +271,7 @@ end;
 /
 PROMPT
 PROMPT =================================================================================
-PROMPT UNINSTALL of HOTSOS_ILO Complete
+PROMPT UNINSTALL of ILO Complete
 PROMPT
 PROMPT Note: The &&h_user schema was NOT dropped as part of the uninstall. 
 PROMPT If you wish to do so, copy/paste this:

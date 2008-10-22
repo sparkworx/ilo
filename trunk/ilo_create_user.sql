@@ -1,4 +1,4 @@
-REM HOTSOS_ILO
+REM ILO
 REM Copyright (c) 2006 - 2008 by Method R Corporation. All rights reserved.
 REM
 REM This library is free software; you can redistribute it and/or

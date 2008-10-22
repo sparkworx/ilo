@@ -1,6 +1,6 @@
 =========================================================================
 
-    HOTSOS_ILO
+    ILO
     Copyright (c) 2006 - 2008 by Method R Corporation. All rights reserved.
 
     This library is free software; you can redistribute it and/or
@@ -26,22 +26,29 @@ means that any custom code you have added to those packages will be lost when yo
 re-install or upgrade ILO. If you have added custom code, please save your code changes
 for re-implementation before installing this version of ILO.
 
-To install, re-install, or upgrade the HOTSOS_ILO packages:
+**********************************************************************************************
+IMPORTANT NOTE
+When upgrading, be aware that the script will login using the password entered,
+so if your password is not case sensitive, enter it in upper case. If your password
+is case sensitive, enter it correctly with no enclosing quotation marks.
+**********************************************************************************************
 
-1. Change directory to the location of the HOTSOS_ILO scripts. You must have write
+To install, re-install, or upgrade the ILO packages:
+
+1. Change directory to the location of the ILO scripts. You must have write
    permissions to this directory so that the install script can create files.
    
 2. Using SQL*Plus, login to your database as the SYS user, or a user with SYSDBA privileges:
 
 	sqlplus SYS/<password>@<alias> AS SYSDBA
 
-3. Create a user that will own the HOTSOS_ILO packages (i.e. HOTSOS). You may
-   create this user manually, using the script hotsos_create_user.sql as a guide, or 
+3. Create a user that will own the ILO packages (i.e. ILO). You may
+   create this user manually, using the script ilo_create_user.sql as a guide, or 
    you may just continue to step 4 and the user will be created during script execution.
 
 4. From the SQL prompt in SQL*Plus:
 
-	SQL> @hotsos_ilo_install.sql
+	SQL> @ilo_install.sql
 
 5. Follow the on screen instructions.
 
