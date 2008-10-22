@@ -1,4 +1,4 @@
-REM HOTSOS_ILO
+REM ILO
 REM Copyright (c) 2006 - 2008 by Method R Corporation. All rights reserved.
 REM
 REM This library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ GRANT CREATE SYNONYM TO &&h_user;
 GRANT ALTER SESSION TO &&h_user;
 
 
--- The following grants are necessary for the HOTSOS_SYSUTIL package.
+-- The following grants are necessary for the ILO_SYSUTIL package.
 -- Actual procedures and functions accessed within these system packages
 -- are detailed prior to each grant. Some of these privileges may exist
 -- already from PUBLIC. Revocation of these privileges will cause ILO failure.

@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE Hotsos_Ilo_Timer AS
+CREATE OR REPLACE PACKAGE BODY Ilo_Timer AS
 ---------------------------------------------------------------------
 --  Provides a mechanism for inserting task begin and end times into a local table.
 ---------------------------------------------------------------------
@@ -25,16 +25,25 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Timer AS
 --------------------------------------------------------------------
 --
 --  Naming Standards
---    v_ <>         Variables
---    c_<>          Constants
---    g_<>          Package Globals
---    ex_           User defined Exceptions
---    r_<>          Records
---    cs_<>         Cursors
---    csp_<>        Cursor Parameters
---    <>_T          Types
---    <>_O          Object Types
+--    v_ <> Variables
+--    c_<>  Constants
+--    g_<>  Package Globals
+--    ex_   User defined Exceptions
+--    r_<>  Records
+--    cs_<> Cursors
+--    csp_<>   Cursor Parameters
+--    <>_T  Types
+--    <>_O  Object Types
 --
+---------------------------------------------------------------------
+
+   ---------------------------------------------------------------------
+   --< PRIVATE TYPES AND GLOBALS >--------------------------------------
+   ---------------------------------------------------------------------
+
+   -- Used in GET_CONFIG for overriding schedule
+   g_all_interesting BOOLEAN := FALSE;
+   g_ignore_schedule BOOLEAN := FALSE;
 
    ---------------------------------------------------------------------
    --< BEGIN_TIMED_TASK >
@@ -47,7 +56,18 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Timer AS
    --   %return NUMBER	  This number is used as the "ID" of the Timed task and is output into the trace file as such.
    --
    ---------------------------------------------------------------------
-   FUNCTION begin_timed_task(p_begin_time timestamp) RETURN NUMBER;
+   FUNCTION begin_timed_task(p_begin_time timestamp) RETURN NUMBER IS
+   BEGIN
+      RETURN NULL;
+   EXCEPTION
+      WHEN OTHERS THEN
+         if ilo_sysutil.get_raise_exceptions then 
+            raise;
+         else
+            RETURN NULL;
+         end if;
+   END begin_timed_task;
+
    ---------------------------------------------------------------------
    --< END_TIMED_TASK >
    ---------------------------------------------------------------------
@@ -61,36 +81,72 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Timer AS
    --   %param p_end_time   A timestamp that replaces the natural end time of the task.
    --
    ---------------------------------------------------------------------
-   PROCEDURE end_timed_task (p_stack_rec   Hotsos_Ilo_Task.stack_rec_t
-                            ,p_error_num   PLS_INTEGER default 0
-                            ,p_end_time    timestamp DEFAULT NULL);
+   PROCEDURE end_timed_task (
+      p_stack_rec   ilo_task.stack_rec_t
+     ,p_error_num   PLS_INTEGER default 0
+     ,p_end_time timestamp DEFAULT NULL)
+   IS
+   BEGIN
+      NULL;
+   EXCEPTION
+      WHEN OTHERS THEN
+         if ilo_sysutil.get_raise_exceptions then 
+            raise;
+         else
+            NULL;
+         end if;
+   END end_timed_task;
    ---------------------------------------------------------------------
    --< get_version >
    ---------------------------------------------------------------------
    --
-   --  Purpose: Returns the version of the HOTSOS_ILO_TIMER PACKAGE
+   --  Purpose: Returns the version of the ILO_TIMER PACKAGE
    --
    --   %return NUMBER	  NUMBER value that indicates version of ILO
    ---------------------------------------------------------------------
-   FUNCTION get_version RETURN NUMBER;
+   FUNCTION get_version 
+      RETURN NUMBER
+   IS
+   BEGIN
+      RETURN &&ilo_version;
+   EXCEPTION
+      WHEN OTHERS THEN
+         if ilo_sysutil.get_raise_exceptions then 
+            raise;
+         else
+            RETURN NULL;
+         end if;
+   END get_version;
+
    ---------------------------------------------------------------------
    --< FLUSH_ILO_RUNS >
    ---------------------------------------------------------------------
    --
    --  Purpose: This is currently a null package that is called at the very end of the "end_task" once the stack is empty.
    ---------------------------------------------------------------------
-   PROCEDURE flush_ilo_runs;
+   PROCEDURE flush_ilo_runs 
+   IS
+   BEGIN
+     null;
+   EXCEPTION
+      WHEN OTHERS THEN
+         if ilo_sysutil.get_raise_exceptions then 
+            raise;
+         else
+            NULL;
+         end if;
+   end flush_ilo_runs;
    ---------------------------------------------------------------------
    --< get_config >
    ---------------------------------------------------------------------
-   --  Purpose: is used by HOTSOS_ILO.BEGIN_TASK to determine whether a MODULE/ACTION pair
+   --  Purpose: is used by ILO.BEGIN_TASK to determine whether a MODULE/ACTION pair
    --  Should be traced, and to what nesting level it should store detail.
    --
    --   %param p_module         IN  VARCHAR2 - The module passed into BEGIN_TASK
    --   %param p_action         IN  VARCHAR2 - The action passed into BEGIN_TASK
    --   %param p_trace          OUT BOOLEAN  - Whether or not to trace the current MODULE/ACTION pair
    --   %param p_walltime       OUT BOOLEAN  - Whether or not to write the WALL TIME out to the trace file for a TRACED task
-   --   %param p_rtime          OUT BOOLEAN  - Whether or not to call the BEGIN_TIMED_TASK/END_TIMED_TASK ILO_TIMER methods.
+   --   %param p_rtimer         OUT BOOLEAN  - Whether or not to call the BEGIN_TIMED_TASK/END_TIMED_TASK ILO_TIMER methods.
    --
    --   %usage_notes
    --   <li> Currently all of the OUT values are hardcoded. Please see the package body for defaults
@@ -100,7 +156,37 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Timer AS
                         ,p_action        IN VARCHAR2
                         ,p_trace         OUT BOOLEAN
                         ,p_walltime      OUT BOOLEAN
-                        ,p_rtime         OUT BOOLEAN); 
+                        ,p_rtime         OUT BOOLEAN)  
+   IS 
+   BEGIN 
+      IF g_all_interesting AND g_ignore_schedule THEN
+        p_trace := TRUE;
+        P_walltime := TRUE;
+        p_rtime := TRUE;
+      --If the Module and Action are "interesting"  ...
+      --ELSIF call your custom method here THEN
+      --
+      -- If the Module and Action DON'T exist in the schedule ...    
+      ELSE 
+        IF g_all_interesting THEN
+          p_trace := TRUE;
+          P_walltime := TRUE;
+          p_rtime := TRUE;
+        ELSE
+          p_trace := FALSE;
+          P_walltime := FALSE;
+          p_rtime := FALSE;
+        END IF;
+      END IF;
+   EXCEPTION
+      WHEN OTHERS THEN
+         if ilo_sysutil.get_raise_exceptions then 
+            raise;
+         else
+            RETURN;
+         end if;
+   END GET_CONFIG;
+  
    ---------------------------------------------------------------------
    --< Refresh_Schedule >
    ---------------------------------------------------------------------
@@ -110,9 +196,19 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Timer AS
    --
    --  Comments:
    --
-   --
    ---------------------------------------------------------------------
-   PROCEDURE refresh_schedule ;                    
+   PROCEDURE refresh_schedule IS
+   BEGIN
+     NULL;
+   EXCEPTION
+      WHEN OTHERS THEN
+         if ilo_sysutil.get_raise_exceptions then 
+            raise;
+         else
+            NULL;
+         end if;
+   END refresh_schedule;  
+
    ---------------------------------------------------------------------
    --< set_mark_all_tasks_interesting >
    ---------------------------------------------------------------------
@@ -133,7 +229,20 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Timer AS
    --   %usage_notes
    --   <li> The default for MARK_ALL_TASKS_INTERESTING and IGNORE_SCHEDULE is FALSE.
    ---------------------------------------------------------------------
-   PROCEDURE set_mark_all_tasks_interesting(mark_all_tasks_interesting boolean, ignore_schedule boolean DEFAULT FALSE);
+   PROCEDURE set_mark_all_tasks_interesting(mark_all_tasks_interesting boolean, ignore_schedule boolean DEFAULT FALSE)
+   IS
+   BEGIN
+      g_all_interesting := NVL (mark_all_tasks_interesting, g_all_interesting);
+      g_ignore_schedule := NVL (ignore_schedule, g_ignore_schedule);
+   EXCEPTION
+      WHEN OTHERS THEN
+         if ilo_sysutil.get_raise_exceptions then 
+	    raise;
+	 else
+            NULL;
+	 end if;
+   END set_mark_all_tasks_interesting;
+
    ---------------------------------------------------------------------
    --< get_mark_all_tasks_interesting >
    ---------------------------------------------------------------------
@@ -147,7 +256,20 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Timer AS
    --   <li> Returns the value of MARK_ALL_TASKS_INTERESTING set by the user. If the user has not called the SET_MARK_ALL_TASKS_INTERESTING method, the default is FALSE.
    --
    ---------------------------------------------------------------------
-   FUNCTION get_mark_all_tasks_interesting RETURN BOOLEAN;
+   FUNCTION get_mark_all_tasks_interesting
+      RETURN BOOLEAN
+   IS
+   BEGIN
+      RETURN g_all_interesting;
+   EXCEPTION
+      WHEN OTHERS THEN
+         if ilo_sysutil.get_raise_exceptions then 
+	    raise;
+	 else
+            RETURN NULL;
+	 end if;
+   END get_mark_all_tasks_interesting;
+
    ---------------------------------------------------------------------
    --< get_ignore_schedule >
    ---------------------------------------------------------------------
@@ -161,6 +283,27 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Timer AS
    --   <li> Returns the value of IGNORE_SCHEDULE set by the user. If the user has not called the SET_MARK_ALL_TASKS_INTERESTING method, the default is FALSE.
    --
    ---------------------------------------------------------------------
-   FUNCTION get_ignore_schedule RETURN BOOLEAN;
+   FUNCTION get_ignore_schedule
+      RETURN BOOLEAN
+   IS
+   BEGIN
+      RETURN g_ignore_schedule;
+   EXCEPTION
+      WHEN OTHERS THEN
+         if ilo_sysutil.get_raise_exceptions then 
+	    raise;
+	 else
+            RETURN NULL;
+	 end if;
+   END get_ignore_schedule;
 
-END Hotsos_Ilo_Timer;
+BEGIN 
+    refresh_schedule;
+EXCEPTION
+   WHEN OTHERS THEN
+      if ilo_sysutil.get_raise_exceptions then 
+         raise;
+      else
+         NULL;
+      end if;
+END Ilo_Timer;

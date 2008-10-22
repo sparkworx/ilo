@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
+CREATE OR REPLACE PACKAGE Ilo_Task AS
    ------------------------------------------------------------------------------------
    --   Contains procedures for defining tasks, setting the MODULE, ACTION, and CLIENT_ID, and for measuring tasks using SQL trace.
    ------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --   Developer, can make the job much simpler for everyone downstream (including
    --   yourself) by inserting a few extra lines of code--called
    --   <i>instrumentation</i>--into your applications. With the right
-   --   instrumentation library, the job is easy. The Hotsos Instrumentation Library
+   --   instrumentation library, the job is easy. The Instrumentation Library
    --   for Oracle (ILO) gives you the lines of code that you're looking for.
    --
    --   <b>The Payoff</b>
@@ -46,14 +46,14 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --
    --   <b>All You Have to Do is Mark Your Tasks</b>
    --
-   --   A task is any unit of work whose duration you want to measure. HOTSOS_ILO_TASK
+   --   A task is any unit of work whose duration you want to measure. ILO_TASK
    --   makes it very simple to define tasks within your application. You simply
    --   bracket the code path that constitutes a performance-measurable work unit (a
    --   task) with calls to BEGIN_TASK and END_TASK, like this:
    --   <code>
-   --      hotsos_ilo_task.begin_task(module, action, client, comment);
+   --      ilo_task.begin_task(module, action, client, comment);
    --      -- The code path for your task goes here.
-   --      hotsos_ilo_task.end_task;
+   --      ilo_task.end_task;
    --   </code>
    --   Using BEGIN_TASK and END_TASK does all the Oracle housekeeping your
    --   application needs. All that stuff you've ever heard about
@@ -64,7 +64,7 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --
    --   Here are a few guidelines to make instrumenting your tasks easier:
    --
-   --   <li>Task names in HOTSOS_ILO_TASK contain two hierarchical components:
+   --   <li>Task names in ILO_TASK contain two hierarchical components:
    --   the MODULE and the ACTION. Think of the ACTION as the name of the task itself
    --   and the MODULE as a means of identifying what part of your application the
    --   task represents. For smaller applications, the module name could and probably
@@ -89,16 +89,16 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --   customer wants to measure and manage the duration of each loop iteration. You
    --   can define each loop iteration as a (sub)task, as in the following example:
    --   <code>
-   --     hotsos_ilo_task.begin_task('Billing', 'Invoice customers', '', '');
+   --     ilo_task.begin_task('Billing', 'Invoice customers', '', '');
    --     for i in 1 .. r.count loop
-   --       hotsos_ilo_task.begin_task('', 'Invoice one customer', '', i);
+   --       ilo_task.begin_task('', 'Invoice one customer', '', i);
    --       -- Code to invoice a customer goes here.
-   --       hotsos_ilo_task.end_task;
+   --       ilo_task.end_task;
    --     end loop;
-   --     hotsos_ilo_task.end_task;
+   --     ilo_task.end_task;
    --   </code>
    --   Be careful how granular you get with your nesting. We've made every effort to
-   --   make the Hotsos Instrumentation Library as fast and efficient as possible,
+   --   make the Instrumentation Library for Oracle as fast and efficient as possible,
    --   but nested BEGIN_TASK calls can themselves become a performance problem if
    --   the tasks you're instrumenting have very tiny durations.
    --
@@ -199,7 +199,7 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --
    --
    --  Purpose: This procedure was used to set the nesting level to be used by ILO to track statistics and emit trace data.
-   --  HOTSOS_ILO_TASK.BEGIN_TASK now calls HOTSOS_ILO_TIMER.GET_CONFIG to determine the appropriate nesting level.
+   --  ILO_TASK.BEGIN_TASK now calls ILO_TIMER.GET_CONFIG to determine the appropriate nesting level.
    --
    --  AS OF 1.6, this procedure has no effect.
    ---------------------------------------------------------------------
@@ -242,7 +242,7 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --  DEPRECATED AS OF 1.6 
    --
    --  Purpose: This procedure was used to express the user's intention to begin tracing. 
-   --  HOTSOS_ILO.BEGIN_TASK now calls ILO_TIMER.GET_CONFIG to determine whether to trace or not.
+   --  ILO.BEGIN_TASK now calls ILO_TIMER.GET_CONFIG to determine whether to trace or not.
    --  
    --  AS OF 1.6, this procedure calls the new SET_MARK_ALL_TASKS_INTERESTING procedure.
    --  This is only temporary, and will be phased out in future release.
@@ -298,7 +298,7 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --   <li>Marks the beginning of a unit of work. Should be placed right after the "BEGIN" in a procedure or function definition.
    --   <li>Performs, at a minimum, a DBMS_APPLICATION_INFO.SET_MODULE(module, action).
    --   <li>Writes a line to the trace file in this format:
-   --             HOTSOS_ILO_TASK.BEGIN_TASK[Sequence][Module Name][Action Name][Client Id][Comments]
+   --             ILO_TASK.BEGIN_TASK[Sequence][Module Name][Action Name][Client Id][Comments]
    --   <li>Pushes the MODULE/ACTION on to a stack along with whether tracing is needed for the MODULE/ACTION.
    --   <li>The MODULE could be name of Package.Procedure or the name of a form.
    --   <li>If the MODULE is NULL and the MODULE of the parent is currently set, then the MODULE will inherit its parent task's MODULE. If the MODULE is NULL and there is no parent task, then the MODULE will be set to "No Module Specified".
@@ -319,17 +319,17 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --       commission NUMBER,
    --       department NUMBER) AS
    --     BEGIN
-   --       HOTSOS_ILO_TASK.BEGIN_TASK(module => 'Human Resources', action => 'Adding Employees');
+   --       ILO_TASK.BEGIN_TASK(module => 'Human Resources', action => 'Adding Employees');
    --       INSERT INTO emp
    --         (ename, empno, sal, mgr, job, hiredate, comm, deptno)
    --          VALUES (name, emp_seq.nextval, salary, manager, title, SYSDATE,
    --           commission, department);
-   --       HOTSOS_ILO_TASK.END_TASK;
+   --       ILO_TASK.END_TASK;
    --     EXCEPTION
    --     WHEN OTHERS
    --     THEN
    --       dbms_output.put_line('Exception thrown');
-   --       HOTSOS_ILO_TASK.END_TASK(error_num =>SQLCODE);
+   --       ILO_TASK.END_TASK(error_num =>SQLCODE);
    --     END;
    --   </CODE><BR>
    ---------------------------------------------------------------------
@@ -353,9 +353,9 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --   <li>In procedures, should be placed right before the "END" and "EXCEPTION" statements.
    --   <li>In "EXCEPTION" statements it would be best to pass the SQLCODE as the error_num.
    --   <li>In functions, should occur right before all "RETURN" statements (which should also be in the EXCEPTION blocks).
-   --   <li>Pops the MODULE/ACTION off the stack created and pushed on too the stack created by the HOTSOS_ILO_TASK.BEGIN_TASK to retrieve the previous MODULE/ACTION. If it is at the last END_TASK of the BEGIN_TASK/END_TASK pairs then it will perform a DBMS_APPLICATION_INFO.SET_MODULE(module=>NULL,action=>NULL).
+   --   <li>Pops the MODULE/ACTION off the stack created and pushed on too the stack created by the ILO_TASK.BEGIN_TASK to retrieve the previous MODULE/ACTION. If it is at the last END_TASK of the BEGIN_TASK/END_TASK pairs then it will perform a DBMS_APPLICATION_INFO.SET_MODULE(module=>NULL,action=>NULL).
    --   <li>Writes a line to the trace file in this format:
-   --   HOTSOS_ILO_TASK.END_TASK[Module Name][Action Name][Client Id][Comments]
+   --   ILO_TASK.END_TASK[Module Name][Action Name][Client Id][Comments]
    --   <li>The END_TIME can be set explicitly to sync up with the application server rather than the database. Ensure that the time is also sent in BEGIN_TASK to avoid appearance of time travel...
    --
    --   %examples
@@ -369,17 +369,17 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --       commission NUMBER,
    --       department NUMBER) AS
    --     BEGIN
-   --       HOTSOS_ILO_TASK.BEGIN_TASK(module => 'Human Resources', action => 'Adding Employees');
+   --       ILO_TASK.BEGIN_TASK(module => 'Human Resources', action => 'Adding Employees');
    --       INSERT INTO emp
    --         (ename, empno, sal, mgr, job, hiredate, comm, deptno)
    --          VALUES (name, emp_seq.nextval, salary, manager, title, SYSDATE,
    --           commission, department);
-   --       HOTSOS_ILO_TASK.END_TASK;
+   --       ILO_TASK.END_TASK;
    --     EXCEPTION
    --     WHEN OTHERS
    --     THEN
    --       dbms_output.put_line('Exception thrown');
-   --       HOTSOS_ILO_TASK.END_TASK(error_num =>SQLCODE);
+   --       ILO_TASK.END_TASK(error_num =>SQLCODE);
    --     END;
    --   </CODE><BR>
    ---------------------------------------------------------------------
@@ -412,9 +412,9 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --   To print out the value of the current record: <BR>
    --   <CODE>
    --   DECLARE
-   --     l_record HOTSOS_ILO_TASK.stack_rec_t;
+   --     l_record ILO_TASK.stack_rec_t;
    --   BEGIN
-   --     l_record := HOTSOS_ILO_TASK.GET_TASK();
+   --     l_record := ILO_TASK.GET_TASK();
    --     IF l_record.module IS NOT NULL THEN
    --         dbms_output.put_line('sequence =>'     || l_list(i).sequence
    --                         || ', module =>'       || l_list(i).module
@@ -443,9 +443,9 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --   To print out all values in the current stack: <BR>
    --   <CODE>
    --   DECLARE
-   --     l_list HOTSOS_ILO_TASK.stack_t;
+   --     l_list ILO_TASK.stack_t;
    --   BEGIN
-   --     l_list := HOTSOS_ILO_TASK.GET_TASK_STACK();
+   --     l_list := ILO_TASK.GET_TASK_STACK();
    --     IF l_list.count > 0 THEN
    --       FOR i in 1 .. l_list.count LOOP
    --         dbms_output.put_line('sequence =>'     || l_list(i).sequence
@@ -461,22 +461,22 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --   </CODE><BR>
    --
    --------------------------------------------------------------------
-   FUNCTION get_task_stack RETURN Hotsos_Ilo_Task.stack_t;
+   FUNCTION get_task_stack RETURN ilo_task.stack_t;
    ---------------------------------------------------------------------
    --< Get_Version>
    ---------------------------------------------------------------------
-   --   Returns the current version of the HOTSOS_ILO Suite that is currently installed.
+   --   Returns the current version of the ILO Suite that is currently installed.
    --
    --   %usage_notes
-   --   <li>You can call this directly to return the version of HOTSOS_ILO_TASK.
+   --   <li>You can call this directly to return the version of ILO_TASK.
    --
    --   %examples
-   --   To get the current version of the HOTSOS_ILO_TASK package <BR>
+   --   To get the current version of the ILO_TASK package <BR>
    --   <CODE>
    --   DECLARE
    --     v_version number;
    --   BEGIN
-   --     v_version := hotsos_ilo_task.get_version();
+   --     v_version := ilo_task.get_version();
    --     DBMS_OUTPUT.PUT_LINE(to_char(v_version));
    --   END;
    --   </CODE><BR>
@@ -484,4 +484,4 @@ CREATE OR REPLACE PACKAGE Hotsos_Ilo_Task AS
    --------------------------------------------------------------------
    FUNCTION get_version RETURN NUMBER;
 
-END Hotsos_Ilo_Task;
+END Ilo_Task;

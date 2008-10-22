@@ -1,4 +1,4 @@
-REM HOTSOS_ILO
+REM ILO
 REM Copyright (c) 2006 - 2008 by Method R Corporation. All rights reserved.
 REM
 REM This library is free software; you can redistribute it and/or
@@ -17,18 +17,18 @@ REM Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 REM
 PROMPT ========================================================================
 PROMPT
-PROMPT This script will install the HOTSOS Oracle Instrumentation Library
+PROMPT This script will install the Instrumentation Library for Oracle (ILO)
 PROMPT and its associated utilities.
 PROMPT
 PROMPT Objects Installed:
 PROMPT
-PROMPT * Package HOTSOS_SYSUTIL 
-PROMPT * Package HOTSOS_ILO_TASK
-PROMPT * Package HOTSOS_ILO_TIMER
+PROMPT * Package ILO_SYSUTIL 
+PROMPT * Package ILO_TASK
+PROMPT * Package ILO_TIMER
 PROMPT
-PROMPT * Public Synonym HOTSOS_SYSUTIL 
-PROMPT * Public Synonym HOTSOS_ILO_TASK
-PROMPT * Public Synonym HOTSOS_ILO_TIMER
+PROMPT * Public Synonym ILO_SYSUTIL 
+PROMPT * Public Synonym ILO_TASK
+PROMPT * Public Synonym ILO_TIMER
 PROMPT
 PROMPT * Execute privileges are granted to PUBLIC for these packages
 PROMPT
@@ -43,17 +43,17 @@ PROMPT
 set define '&' 
 set echo off heading off termout off feedback off verify off
 
-select 'start ' || decode(user, 'SYS', 'hotsos_ilo_sysok.sql', 'hotsos_ilo_sysnotok.sql')
+select 'start ' || decode(user, 'SYS', 'ilo_sysok.sql', 'ilo_sysnotok.sql')
 from  dual
 
-spool hotsos_ilo_install.tmp
+spool ilo_install.tmp
 /
 spool off
-start hotsos_ilo_install.tmp
+start ilo_install.tmp
 
-ACCEPT h_user char default HOTSOS prompt '*** Enter the user you wish to own HOTSOS_ILO [hotsos]: '
-ACCEPT h_pw   char default HOTSOS prompt '*** Enter the password for this user [hotsos]:          ' HIDE
-ACCEPT alias  char                prompt '*** Enter the TNS alias for this user:                  '
+ACCEPT h_user char default ILO prompt '*** Enter the user you wish to own ILO [ilo]: '
+ACCEPT h_pw   char             prompt '*** Enter the password for this user: ' HIDE
+ACCEPT alias  char             prompt '*** Enter the TNS alias for this user: '
 
 VARIABLE tnsalias varchar2(2000);
 begin
@@ -76,7 +76,7 @@ rem set the version variable for use in packages
 column iloversion new_value ilo_version
 select '2.1' iloversion from dual;
 
-rem get the database version for use in HOTSOS_SYSUTIL package
+rem get the database version for use in ILO_SYSUTIL package
 VARIABLE g_db_major_ver varchar2(64);
 VARIABLE g_db_prod varchar2(64);
 VARIABLE g_db_ver varchar2(64);
@@ -111,24 +111,24 @@ column a_db_major_ver new_value g_db_major_ver
 select :g_db_major_ver a_db_major_ver,:g_db_prod a_db_prod,:g_db_ver a_db_ver from dual;
 
 
-select 'start ' || 'hotsos_ilo_hotsosok.sql &&h_user'
+select 'start ' || 'ilo_userok.sql &&h_user'
 from all_users where upper(username) = upper('&&h_user')
 UNION
-select 'start ' || 'hotsos_ilo_hotsosnotok.sql &&h_user'
+select 'start ' || 'ilo_usernotok.sql &&h_user'
 from dual 
 where not exists (select null from all_users where upper(username) = upper('&&h_user'))
 
-spool hotsos_ilo_install.tmp
+spool ilo_install.tmp
 /
 spool off
-start hotsos_ilo_install.tmp
+start ilo_install.tmp
 
-start hotsos_ilo_install_user.sql
+start ilo_install_user.sql
 
 REM The following statement requires this script to be run with DBA privilege.
 
 set echo off heading off termout off feedback off
-spool hotsos_ilo_install.tmp
+spool ilo_install.tmp
    SELECT 'PROMPT ... Installing DBMS_SUPPORT' || chr(13) || chr(10)
           || '@?' || f.sep || 'rdbms' || f.sep || 'admin' || f.sep || 'dbmssupp.sql'
    FROM Product_Component_Version v,
@@ -161,20 +161,19 @@ UNION ALL
 spool off
 
 set termout on
-spool hotsos_ilo_install.log
+spool ilo_install.log
 
-@hotsos_ilo_install.tmp
+@ilo_install.tmp
 PROMPT
-
 set serveroutput on size 1000000
 declare
-  procedure create_public_synonym (p_synonym varchar2) is
+  procedure create_public_synonym (p_synonym varchar2, p_obj varchar2 default null) is
     already_exists exception;
     PRAGMA EXCEPTION_INIT (already_exists, -955);
     v_owner dba_synonyms.table_owner%type;
   begin
-    dbms_output.put_line('... Creating public synonym '||p_synonym||' for &&h_user..'||p_synonym);
-    execute immediate 'create public synonym '||p_synonym||' for &&h_user..'||p_synonym;
+    dbms_output.put_line('... Creating public synonym '||p_synonym||' for &&h_user..'||nvl(p_obj,p_synonym));
+    execute immediate 'create public synonym '||p_synonym||' for &&h_user..'||nvl(p_obj,p_synonym);
   exception
     when already_exists then
       begin
@@ -192,10 +191,56 @@ declare
         end if;
       end;
   end create_public_synonym;
+  procedure drop_public_synonym (p_obj varchar2) is
+    not_exists exception;
+    PRAGMA EXCEPTION_INIT (not_exists, -1432);
+  begin
+    dbms_output.put_line('... Dropping public synonym '||p_obj);
+    execute immediate 'drop public synonym '||p_obj;
+  exception
+    when not_exists then null;
+    when others then dbms_output.put_line(sqlerrm);
+  end drop_public_synonym;
+  procedure create_synonym (p_synonym varchar2, p_obj varchar2) is
+    already_exists exception;
+    PRAGMA EXCEPTION_INIT (already_exists, -955);
+  begin
+    dbms_output.put_line('... Creating synonym '||p_synonym||' for &&h_user..'||p_obj);
+    execute immediate 'create synonym &&h_user..'||p_synonym||' for &&h_user..'||p_obj;
+  exception
+    when already_exists then
+          dbms_output.put_line('********************************************************************************');
+          dbms_output.put_line('****************************     WARNING      **********************************');
+          dbms_output.put_line('********************************************************************************');
+          dbms_output.put_line('***                                                                          ***');
+          dbms_output.put_line('*** Synonym '||p_synonym||' already exists for this schema.');
+          dbms_output.put_line('*** Modify the private synonyms manually if desired.');
+          dbms_output.put_line('***                                                                          ***');
+          dbms_output.put_line('********************************************************************************');
+  end create_synonym;
 begin
-  create_public_synonym('hotsos_ilo_task');
-  create_public_synonym('hotsos_ilo_timer');
-  create_public_synonym('hotsos_sysutil');
+  create_public_synonym('ilo_task');
+  create_public_synonym('ilo_timer');
+  create_public_synonym('ilo_sysutil');
+  -- If upgrading from 2.0 or earlier, replace existing synonyms to handle the new naming convention.
+  for rec in (select null from dba_synonyms
+               where table_owner in ('&&h_user',upper('&&h_user'))
+                 and owner = 'PUBLIC' and synonym_name = 'HOTSOS_ILO_TASK'
+                 and rownum = 1
+             )
+  loop
+    drop_public_synonym('hotsos_ilo_task');
+    drop_public_synonym('hotsos_ilo_timer');
+    drop_public_synonym('hotsos_sysutil');
+    create_public_synonym('hotsos_ilo_task','ilo_task');
+    create_public_synonym('hotsos_ilo_timer','ilo_timer');
+    create_public_synonym('hotsos_sysutil','ilo_sysutil');
+    -- create private synonyms in case the public synonyms were not being used and
+    -- references were made like hotsos.hotsos_ilo_task.begin_task
+    create_synonym('hotsos_ilo_task','ilo_task');
+    create_synonym('hotsos_ilo_timer','ilo_timer');
+    create_synonym('hotsos_sysutil','ilo_sysutil');
+  end loop;
 end;
 /
 
@@ -214,7 +259,7 @@ declare
 begin
   for rec in (select object_name from all_objects where owner = '&&h_user' and object_name = 'HOTSOS_ILO_TASK' and object_type = 'PACKAGE')
   loop
-    execute immediate 'select 1 from dual where hotsos.hotsos_ilo_task.get_version < 1.6';
+    execute immediate 'select 1 from dual where &&h_user..hotsos_ilo_task.get_version < 1.6';
     if sql%rowcount > 0 then
       drop_package('SYS.HOTSOS_SYSUTIL');
     end if;
@@ -243,36 +288,36 @@ PROMPT =========================================================================
 PROMPT 
 PROMPT ... Connecting as &&h_user
 connect &&h_user/"&&h_pw&&tnsalias 
-PROMPT ... Installing HOTSOS_SYSUTIL Package Spec
-@hotsos_sysutil.pks
+PROMPT ... Installing ILO_SYSUTIL Package Spec
+@ilo_sysutil.pks
 /
 show errors;
-PROMPT ... Installing HOTSOS_SYSUTIL Package Body
-@hotsos_sysutil.pkb
+PROMPT ... Installing ILO_SYSUTIL Package Body
+@ilo_sysutil.pkb
 /
 show errors;
-PROMPT ... Installing HOTSOS_ILO_TASK Package Spec
-@hotsos_ilo_task.pks
+PROMPT ... Installing ILO_TASK Package Spec
+@ilo_task.pks
 /
 show errors;
-PROMPT ... Installing HOTSOS_ILO_TIMER Package Spec
-@hotsos_ilo_timer.pks
+PROMPT ... Installing ILO_TIMER Package Spec
+@ilo_timer.pks
 /
 show errors;
-PROMPT ... Installing HOTSOS_ILO_TIMER Package Body
-@hotsos_ilo_timer.pkb
+PROMPT ... Installing ILO_TIMER Package Body
+@ilo_timer.pkb
 /
 show errors;
-PROMPT ... Installing HOTSOS_ILO_TASK Package Body
-@hotsos_ilo_task.pkb
+PROMPT ... Installing ILO_TASK Package Body
+@ilo_task.pkb
 /
 show errors;
-PROMPT ... Granting EXECUTE privs on HOTSOS_* to PUBLIC
-grant execute on HOTSOS_ILO_TASK to PUBLIC;
-grant execute on HOTSOS_ILO_TIMER to PUBLIC;
+PROMPT ... Granting EXECUTE privs on packages to PUBLIC
+grant execute on ILO_TASK to PUBLIC;
+grant execute on ILO_TIMER to PUBLIC;
 PROMPT
 PROMPT =========================================================================
-PROMPT Installation of HOTSOS ILO complete.
+PROMPT Installation of ILO complete.
 PROMPT =========================================================================
 spool off
 exit
