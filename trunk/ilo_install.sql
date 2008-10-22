@@ -218,6 +218,16 @@ declare
           dbms_output.put_line('***                                                                          ***');
           dbms_output.put_line('********************************************************************************');
   end create_synonym;
+  procedure drop_package (p_obj varchar2) is
+    not_exists exception;
+    PRAGMA EXCEPTION_INIT (not_exists, -4043);
+  begin
+    dbms_output.put_line('... Dropping package &&h_user..'||p_obj);
+    execute immediate 'drop package &&h_user..'||p_obj;
+  exception
+    when not_exists then null;
+    when others then dbms_output.put_line(sqlerrm);
+  end drop_package;
 begin
   create_public_synonym('ilo_task');
   create_public_synonym('ilo_timer');
@@ -232,6 +242,9 @@ begin
     drop_public_synonym('hotsos_ilo_task');
     drop_public_synonym('hotsos_ilo_timer');
     drop_public_synonym('hotsos_sysutil');
+    drop_package('hotsos_ilo_task');
+    drop_package('hotsos_ilo_timer');
+    drop_package('hotsos_sysutil');
     create_public_synonym('hotsos_ilo_task','ilo_task');
     create_public_synonym('hotsos_ilo_timer','ilo_timer');
     create_public_synonym('hotsos_sysutil','ilo_sysutil');
