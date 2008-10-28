@@ -1,5 +1,8 @@
 Release Notes - ILO: 2.1
 
+2184883: Report per widget (normalized) response time cost
+	Added new parameter to END_TASK to allow tracking of widget counts by end user.
+
 2155867: Unbrand for shared use by Hotsos and Method R.
 	Rename objects with ILO_ prefix. Backward compatibility maintained during upgrade
 	through use of appropriate synonyms.
