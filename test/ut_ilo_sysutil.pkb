@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE BODY Ut_Hotsos_Sysutil
+CREATE OR REPLACE PACKAGE BODY Ut_ILO_Sysutil
 IS
 ---------------------------------------------------------------------
 --
@@ -67,16 +67,16 @@ IS
      v_id varchar2(2000);
    BEGIN
       -- get Default 
-      v_id := hotsos_sysutil.get_client_id;
+      v_id := ilo_sysutil.get_client_id;
       print_result('Check Defaults: get_client_id - '||v_id,TRUE);
       
-      hotsos_sysutil.set_client_id('UT_CLIENT_ID');
-      print_result('Check After SET: get_client_id = UT_CLIENT_ID',hotsos_sysutil.get_client_id = 'UT_CLIENT_ID');
+      ilo_sysutil.set_client_id('UT_CLIENT_ID');
+      print_result('Check After SET: get_client_id = UT_CLIENT_ID',ilo_sysutil.get_client_id = 'UT_CLIENT_ID');
 
       -- set it back
-      hotsos_sysutil.set_client_id(v_id);
+      ilo_sysutil.set_client_id(v_id);
      
-      print_result('Check After RESET: get_client_id = '||v_id,hotsos_sysutil.get_client_id = v_id);
+      print_result('Check After RESET: get_client_id = '||v_id,ilo_sysutil.get_client_id = v_id);
 
    END ut_client_id_set_get;
 
@@ -101,82 +101,82 @@ IS
    BEGIN
 
       PACKAGE_RESULTS := TRUE;
-      debug('-- BEGIN ut_hotsos_sysutil');
+      debug('-- BEGIN ut_ilo_sysutil');
 
       dbms_output.put_line(rpad('=',60,'='));
-      dbms_output.put_line('HOTSOS_SYSUTIL Unit tests for version '||hotsos_sysutil.get_version);
+      dbms_output.put_line('ilo_sysutil Unit tests for version '||ilo_sysutil.get_version);
       dbms_output.put_line(rpad('=',60,'='));
 
       /* Process the test Procedures */
-      debug('++ BEGIN hotsos_sysutil.turn_trace_on');
+      debug('++ BEGIN ilo_sysutil.turn_trace_on');
       dbms_output.put_line('*** Turn tracing on ***');
-      hotsos_sysutil.turn_trace_on;
+      ilo_sysutil.turn_trace_on;
 
-      debug('++ BEGIN hotsos_sysutil.write_to_trace');
+      debug('++ BEGIN ilo_sysutil.write_to_trace');
       dbms_output.put_line('*** Writing unit test message to trace file ***');
-      hotsos_sysutil.write_to_trace('*** Unit test hotsos_sysutil.write_to_trace. Datestamp should follow.');
+      ilo_sysutil.write_to_trace('*** Unit test ilo_sysutil.write_to_trace. Datestamp should follow.');
 
-      debug('++ BEGIN hotsos_sysutil.write_datestamp');
+      debug('++ BEGIN ilo_sysutil.write_datestamp');
       dbms_output.put_line('*** Writing datestamp to trace file ***');
-      hotsos_sysutil.write_datestamp;
+      ilo_sysutil.write_datestamp;
 
-      debug('++ BEGIN hotsos_sysutil.write_to_alert');
+      debug('++ BEGIN ilo_sysutil.write_to_alert');
       dbms_output.put_line('*** Writing unit test message to alert log ***');
-      hotsos_sysutil.write_to_alert('*** Unit test hotsos_sysutil.write_to_alert');
+      ilo_sysutil.write_to_alert('*** Unit test ilo_sysutil.write_to_alert');
 
       for rec in (select 'UNIT TEST: THIS SHOULD BE IN TRACE FILE' from dual) loop null; end loop;
 
-      debug('++ BEGIN hotsos_sysutil.turn_trace_off');
+      debug('++ BEGIN ilo_sysutil.turn_trace_off');
       dbms_output.put_line('*** Turn tracing off ***');
-      hotsos_sysutil.turn_trace_off;
+      ilo_sysutil.turn_trace_off;
       
       for rec in (select 'UNIT TEST: THIS SHOULD NOT BE IN TRACE FILE' from dual) loop null; end loop;
 
-      debug('++ BEGIN hotsos_sysutil.get_db_major_ver');
-      print_result('Check Defaults: get_db_major_ver - '||hotsos_sysutil.get_db_major_ver, 
-                   hotsos_sysutil.get_db_major_ver is not null);
+      debug('++ BEGIN ilo_sysutil.get_db_major_ver');
+      print_result('Check Defaults: get_db_major_ver - '||ilo_sysutil.get_db_major_ver, 
+                   ilo_sysutil.get_db_major_ver is not null);
 
-      debug('++ BEGIN hotsos_sysutil.get_spid');
-      print_result('Check Defaults: get_spid - '||hotsos_sysutil.get_spid, 
-                   hotsos_sysutil.get_spid is not null);
+      debug('++ BEGIN ilo_sysutil.get_spid');
+      print_result('Check Defaults: get_spid - '||ilo_sysutil.get_spid, 
+                   ilo_sysutil.get_spid is not null);
 
-      debug('++ BEGIN hotsos_sysutil.get_session_type');
-      print_result('Check Defaults: get_session_type - '||hotsos_sysutil.get_session_type, 
-                   hotsos_sysutil.get_session_type is not null);
+      debug('++ BEGIN ilo_sysutil.get_session_type');
+      print_result('Check Defaults: get_session_type - '||ilo_sysutil.get_session_type, 
+                   ilo_sysutil.get_session_type is not null);
 
-      debug('++ BEGIN hotsos_sysutil.get_instance_name');
-      print_result('Check Defaults: get_instance_name - '||hotsos_sysutil.get_instance_name, 
-                   hotsos_sysutil.get_instance_name is not null);
+      debug('++ BEGIN ilo_sysutil.get_instance_name');
+      print_result('Check Defaults: get_instance_name - '||ilo_sysutil.get_instance_name, 
+                   ilo_sysutil.get_instance_name is not null);
 
-      debug('++ BEGIN hotsos_sysutil.get_service_name');
-      print_result('Check Defaults: get_service_name - '||hotsos_sysutil.get_service_name, 
-                   hotsos_sysutil.get_service_name is not null);
+      debug('++ BEGIN ilo_sysutil.get_service_name');
+      print_result('Check Defaults: get_service_name - '||ilo_sysutil.get_service_name, 
+                   ilo_sysutil.get_service_name is not null);
 
-      debug('++ BEGIN hotsos_sysutil.get_session_user');
-      print_result('Check Defaults: get_session_user - '||hotsos_sysutil.get_session_user, 
-                   hotsos_sysutil.get_session_user is not null);
+      debug('++ BEGIN ilo_sysutil.get_session_user');
+      print_result('Check Defaults: get_session_user - '||ilo_sysutil.get_session_user, 
+                   ilo_sysutil.get_session_user is not null);
 
-      debug('++ BEGIN hotsos_sysutil.get_ip_address');
-      print_result('Check Defaults: get_ip_address - '||hotsos_sysutil.get_ip_address, 
+      debug('++ BEGIN ilo_sysutil.get_ip_address');
+      print_result('Check Defaults: get_ip_address - '||ilo_sysutil.get_ip_address, 
                    TRUE); -- not always set, just output the result
 
-      debug('++ BEGIN hotsos_sysutil.get_terminal');
-      print_result('Check Defaults: get_terminal - '||hotsos_sysutil.get_terminal, 
-                   hotsos_sysutil.get_terminal is not null);
+      debug('++ BEGIN ilo_sysutil.get_terminal');
+      print_result('Check Defaults: get_terminal - '||ilo_sysutil.get_terminal, 
+                   ilo_sysutil.get_terminal is not null);
 
-      debug('++ BEGIN hotsos_sysutil.get_session_id');
-      print_result('Check Defaults: get_session_id - '||hotsos_sysutil.get_session_id, 
-                   hotsos_sysutil.get_session_id is not null);
+      debug('++ BEGIN ilo_sysutil.get_session_id');
+      print_result('Check Defaults: get_session_id - '||ilo_sysutil.get_session_id, 
+                   ilo_sysutil.get_session_id is not null);
 
-      debug('++ BEGIN hotsos_sysutil.get_os_user');
-      print_result('Check Defaults: get_os_user - '||hotsos_sysutil.get_os_user, 
-                   hotsos_sysutil.get_os_user is not null);
+      debug('++ BEGIN ilo_sysutil.get_os_user');
+      print_result('Check Defaults: get_os_user - '||ilo_sysutil.get_os_user, 
+                   ilo_sysutil.get_os_user is not null);
 
-      debug('++ BEGIN hotsos_sysutil.get_session_id');
-      print_result('Check Defaults: get_session_id - '||hotsos_sysutil.get_session_id, 
-                   hotsos_sysutil.get_session_id is not null);
+      debug('++ BEGIN ilo_sysutil.get_session_id');
+      print_result('Check Defaults: get_session_id - '||ilo_sysutil.get_session_id, 
+                   ilo_sysutil.get_session_id is not null);
 
-      debug('++ BEGIN ut_hotsos_sysutil.ut_client_id_set_get');
+      debug('++ BEGIN ut_ilo_sysutil.ut_client_id_set_get');
       ut_client_id_set_get;
 
       /* End of Test Procedure List */
@@ -186,14 +186,14 @@ IS
 
       dbms_output.put_line(rpad('=',60,'='));
       if package_results then
-        dbms_output.put_line('HOTSOS_SYSUTIL Unit tests completed successfully.');
+        dbms_output.put_line('ilo_sysutil Unit tests completed successfully.');
       else
-        dbms_output.put_line('HOTSOS_SYSUTIL Unit tests completed with failures.');
+        dbms_output.put_line('ilo_sysutil Unit tests completed with failures.');
       end if;
       dbms_output.put_line(rpad('=',60,'='));
-      debug('-- END ut_hotsos_sysutil');
+      debug('-- END ut_ilo_sysutil');
 
       RETURN (package_results);
    END;
-END Ut_Hotsos_Sysutil;
+END Ut_ILO_Sysutil;
 /

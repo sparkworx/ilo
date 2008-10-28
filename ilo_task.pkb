@@ -514,13 +514,14 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
    --   DECLARE
    --     l_record ILO_TASK.stack_rec_t;
    --   BEGIN
-   --     l_record := ILO_TASK.GET_TASK();
+   --     l_record := ILO_TASK.GET_CURRENT_TASK();
    --     IF l_record.module IS NOT NULL THEN
-   --         dbms_output.put_line('sequence =>'     || l_list(i).sequence
-   --                         || ', module =>'       || l_list(i).module
-   --                         || ', action =>'       || l_list(i).action
-   --                         || ', client_id =>'    || l_list(i).client_id
-   --                         || ', comment =>'      || l_list(i).comment);
+   --         dbms_output.put_line('sequence =>'     || l_record.sequence
+   --                         || ', module =>'       || l_record.module
+   --                         || ', action =>'       || l_record.action
+   --                         || ', client_id =>'    || l_record.client_id
+   --                         || ', comment =>'      || l_record.comment
+   --                         || ', widgets =>'      || l_record.widget_count);
    --     ELSE
    --       dbms_output.put_line('The record contains no values');
    --     END IF;
@@ -550,7 +551,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
    END get_current_task;
 
    ---------------------------------------------------------------------
-   --< Get_current_task_stack>
+   --< Get_task_stack>
    ---------------------------------------------------------------------
    --   Return a list of records representing all the currently active task contexts. There will be more than one record returned when nested tasks are active.
    --
@@ -572,7 +573,8 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
    --                         || ', module =>'       || l_list(i).module
    --                         || ', action =>'       || l_list(i).action
    --                         || ', client_id =>'    || l_list(i).client_id
-   --                         || ', comment =>'      || l_list(i).comment);
+   --                         || ', comment =>'      || l_list(i).comment
+   --                         || ', widgets =>'      || l_list(i).widget_count);
    --       END LOOP;
    --     ELSE
    --       dbms_output.put_line('No elements in the collection');
@@ -600,8 +602,9 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
    ---------------------------------------------------------------------
    --   Mark the end of an instrumented task.
    --
-   --   %param error_num   Any non-zero integer will be reflected in the timer table as an error.
-   --   %param end_time    The (optional) end time for the task.
+   --   %param error_num      Any non-zero integer will be reflected in the timer table as an error.
+   --   %param end_time       The (optional) end time for the task.
+   --   %param widget_count   The (optional) widget count for the task.
    --
    --   %usage_notes
    --   <li>Expects that the BEGIN_TASK procedure had been run prior to execution.
@@ -611,7 +614,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
    --   <li>In functions, should occur right before all "RETURN" statements (which should also be in the EXCEPTION blocks).
    --   <li>Pops the MODULE/ACTION off the stack created and pushed on too the stack created by the ILO_TASK.BEGIN_TASK to retrieve the previous MODULE/ACTION. If it is at the last END_TASK of the BEGIN_TASK/END_TASK pairs then it will perform a DBMS_APPLICATION_INFO.SET_MODULE(module=>NULL,action=>NULL).
    --   <li>Writes a line to the trace file in this format:
-   --   ILO_TASK.END_TASK[Module Name][Action Name][Client Id][Comments]
+   --   ILO_TASK.END_TASK[Module Name][Action Name][Client Id][Comments][Widget Count]
    --   <li>The END_TIME can be set explicitly to sync up with the application server rather than the database. Ensure that the time is also sent in BEGIN_TASK to avoid appearance of time travel...
    --
    --   %examples
@@ -639,8 +642,9 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
    --     END;
    --   </CODE><BR>
    ---------------------------------------------------------------------
-   PROCEDURE end_task (error_num IN PLS_INTEGER DEFAULT 0, 
-                       end_time in TIMESTAMP default null)
+   PROCEDURE end_task (error_num    IN PLS_INTEGER DEFAULT 0, 
+                       end_time     IN TIMESTAMP DEFAULT NULL,
+                       widget_count IN NUMBER DEFAULT NULL)
    IS
       v_curr_client_id   VARCHAR2 (64);
       v_trace_text       VARCHAR2 (32767);
@@ -648,6 +652,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       -- If there is actually anything in the stack
       IF g_stack.COUNT > 0
       THEN
+            g_stack (g_stack.LAST).widget_count := widget_count;
             -- If we're tracing
             IF (g_trace)
             THEN
@@ -672,6 +677,8 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
                                               )
                              || ']['
                              || process_string (g_stack (g_stack.LAST).COMMENT)
+                             || ']['
+                             || process_string (g_stack (g_stack.LAST).widget_count)
                              || ']';
                ilo_sysutil.write_to_trace (v_trace_text);
             END IF;
@@ -681,7 +688,8 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
             -- End the timed task (which writes the data to the collection and/or database table)
             ilo_timer.end_timed_task (g_stack (g_stack.LAST),
                                       error_num, 
-                                      end_time);
+                                      end_time,
+                                      widget_count);
          END IF;
 
          -- get current client_id. We will see in a moment if we need to change it.
@@ -738,15 +746,15 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
    ---------------------------------------------------------------------
    --   Mark the end of all tasks and subtasks.
    --
-   --   %param p_error_num   Any non-zero integer will be reflected in the timer table as an error.
-   --   %param p_end_time    The (optional) end time for the task.
+   --   %param p_error_num    Any non-zero integer will be reflected in the timer table as an error.
+   --   %param p_end_time     The (optional) end time for the task.
    --
    --   %usage_notes
    --   <li>Deletes all tasks on the stack and marks the end of all tasks initiated with BEGIN_TASK.
    --   <li>In "EXCEPTION" statements it would be best to pass the SQLCODE as the error_num.
    ---------------------------------------------------------------------
    PROCEDURE end_all_tasks (p_error_num IN PLS_INTEGER DEFAULT 0,
-                            p_end_time in TIMESTAMP default null)
+                            p_end_time IN TIMESTAMP DEFAULT NULL)
    IS
    BEGIN
       -- If we've got anything in the stack...

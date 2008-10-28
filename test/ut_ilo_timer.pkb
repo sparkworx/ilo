@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE BODY Ut_Hotsos_Ilo_Timer
+CREATE OR REPLACE PACKAGE BODY Ut_Ilo_Timer
 IS
 ---------------------------------------------------------------------
 --
@@ -77,10 +77,10 @@ IS
    BEGIN
 
       PACKAGE_RESULTS := TRUE;
-      debug('-- BEGIN ut_hotsos_ilo_timer');
+      debug('-- BEGIN ut_Ilo_timer');
 
       dbms_output.put_line(rpad('=',60,'='));
-      dbms_output.put_line('HOTSOS_ILO_TIMER Unit tests for version '||hotsos_ilo_timer.get_version);
+      dbms_output.put_line('Ilo_TIMER Unit tests for version '||Ilo_timer.get_version);
       dbms_output.put_line(rpad('=',60,'='));
 
       /* Process the test Procedures */
@@ -92,15 +92,15 @@ IS
 
       dbms_output.put_line(rpad('=',60,'='));
       if package_results then
-        dbms_output.put_line('HOTSOS_ILO_TIMER Unit tests completed successfully.');
+        dbms_output.put_line('Ilo_TIMER Unit tests completed successfully.');
       else
-        dbms_output.put_line('HOTSOS_ILO_TIMER Unit tests completed with failures.');
+        dbms_output.put_line('Ilo_TIMER Unit tests completed with failures.');
       end if;
       dbms_output.put_line(rpad('=',60,'='));
 
-      debug('-- END ut_hotsos_ilo_timer');
+      debug('-- END ut_Ilo_timer');
 
       RETURN (package_results);
    END;
-END Ut_Hotsos_Ilo_Timer;
+END Ut_Ilo_Timer;
 /

@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE Ut_Hotsos_Sysutil IS
+CREATE OR REPLACE PACKAGE Ut_Ilo_Timer IS
 ---------------------------------------------------------------------
 --
 --  Instrumentation Library for Oracle
@@ -26,5 +26,5 @@ CREATE OR REPLACE PACKAGE Ut_Hotsos_Sysutil IS
    /* Main Entry Point of the package */
    FUNCTION run_tests
       RETURN BOOLEAN;
-END Ut_Hotsos_Sysutil;
+END Ut_Ilo_Timer;
 /
