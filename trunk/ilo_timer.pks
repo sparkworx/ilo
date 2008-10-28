@@ -56,14 +56,16 @@ CREATE OR REPLACE PACKAGE Ilo_Timer AS
    --  You may place logic in this package to track the "END time" of a given task.
    --
    --
-   --   %param p_stack_rec  The current ILO stack as it exists in the session.
-   --   %param p_error_num  An arbitrary error number passed through from the END_TASK call.
-   --   %param p_end_time   A timestamp that replaces the natural end time of the task.
+   --   %param p_stack_rec      The current ILO stack as it exists in the session.
+   --   %param p_error_num      An arbitrary error number passed through from the END_TASK call.
+   --   %param p_end_time       A timestamp that replaces the natural end time of the task.
+   --   %param p_widget_count   The (optional) widget count for the task.
    --
    ---------------------------------------------------------------------
-   PROCEDURE end_timed_task (p_stack_rec   ilo_task.stack_rec_t
-                            ,p_error_num   PLS_INTEGER default 0
-                            ,p_end_time    timestamp DEFAULT NULL);
+   PROCEDURE end_timed_task (p_stack_rec    ilo_task.stack_rec_t
+                            ,p_error_num    PLS_INTEGER default 0
+                            ,p_end_time     timestamp DEFAULT NULL
+                            ,p_widget_count NUMBER DEFAULT NULL);
    ---------------------------------------------------------------------
    --< get_version >
    ---------------------------------------------------------------------

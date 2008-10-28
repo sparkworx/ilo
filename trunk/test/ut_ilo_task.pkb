@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE BODY Ut_Hotsos_Ilo_Task
+CREATE OR REPLACE PACKAGE BODY Ut_Ilo_Task
 IS
 ---------------------------------------------------------------------
 --
@@ -26,14 +26,14 @@ IS
  -- Package Results Variable.
    package_results   BOOLEAN                     := TRUE;
    -- Package Level Variables for use in comparison
-   v_rec_base        Hotsos_Ilo_Task.stack_rec_t;
-   v_rec_return      Hotsos_Ilo_Task.stack_rec_t;
-   v_rec_empty       Hotsos_Ilo_Task.stack_rec_t;
-   v_tab_base        Hotsos_Ilo_Task.stack_t    := Hotsos_Ilo_Task.stack_t
+   v_rec_base        Ilo_Task.stack_rec_t;
+   v_rec_return      Ilo_Task.stack_rec_t;
+   v_rec_empty       Ilo_Task.stack_rec_t;
+   v_tab_base        Ilo_Task.stack_t    := Ilo_Task.stack_t
                                                                           ();
-   v_tab_return      Hotsos_Ilo_Task.stack_t    := Hotsos_Ilo_Task.stack_t
+   v_tab_return      Ilo_Task.stack_t    := Ilo_Task.stack_t
                                                                           ();
-   v_tab_empty       Hotsos_Ilo_Task.stack_t    := Hotsos_Ilo_Task.stack_t
+   v_tab_empty       Ilo_Task.stack_t    := Ilo_Task.stack_t
                                                                           ();
 
 ---------------------------------------------------------------------
@@ -72,8 +72,8 @@ IS
 --< test_stack_eq >--------------------------------------------------
 ---------------------------------------------------------------------
    FUNCTION test_stack_eq (
-      stack1   Hotsos_Ilo_Task.stack_t,
-      stack2   Hotsos_Ilo_Task.stack_t
+      stack1   Ilo_Task.stack_t,
+      stack2   Ilo_Task.stack_t
    )
       RETURN BOOLEAN
    IS
@@ -127,13 +127,13 @@ IS
 --< test_stack_rec_t_equal >-----------------------------------------
 ---------------------------------------------------------------------
    FUNCTION test_stack_rec_t_equal (
-      rec1   Hotsos_Ilo_Task.stack_rec_t,
-      rec2   Hotsos_Ilo_Task.stack_rec_t
+      rec1   Ilo_Task.stack_rec_t,
+      rec2   Ilo_Task.stack_rec_t
    )
       RETURN BOOLEAN
    IS
-      v_tab_1    Hotsos_Ilo_Task.stack_t := Hotsos_Ilo_Task.stack_t ();
-      v_tab_2    Hotsos_Ilo_Task.stack_t := Hotsos_Ilo_Task.stack_t ();
+      v_tab_1    Ilo_Task.stack_t := Ilo_Task.stack_t ();
+      v_tab_2    Ilo_Task.stack_t := Ilo_Task.stack_t ();
    BEGIN
       v_tab_1.EXTEND;
       v_tab_1 (v_tab_1.LAST) := rec1;
@@ -154,20 +154,20 @@ IS
       
    BEGIN
       -- by Default the nesting level should be ZERO
-      print_result('Check Defaults: get_nesting_level for 0', Hotsos_Ilo_Task.get_nesting_level = '0');
+      print_result('Check Defaults: get_nesting_level for 0', Ilo_Task.get_nesting_level = '0');
       
       -- Now set the nesting level to an arbitrary number between 1 and 10 and test
       -- First, get the random number as a whole number
       v_random := ROUND(dbms_random.VALUE * 10,0);
       
       -- Next set the Nesting level to that number
-      Hotsos_Ilo_Task.set_nesting_level(v_random);
+      Ilo_Task.set_nesting_level(v_random);
       
-      print_result('Check After SET: get_nesting_level for '||to_char(v_random), Hotsos_Ilo_Task.get_nesting_level = '0');
+      print_result('Check After SET: get_nesting_level for '||to_char(v_random), Ilo_Task.get_nesting_level = '0');
      
      -- Set the nesting level back to Default.
      
-     Hotsos_Ilo_Task.set_nesting_level(0);
+     Ilo_Task.set_nesting_level(0);
      
    END ut_nesting_level_set_get;
 
@@ -178,15 +178,15 @@ IS
    IS
    BEGIN
       -- by Default the is_apps should be FALSE
-      print_result('Check Defaults: get_is_apps for FALSE', Hotsos_Ilo_Task.get_is_apps = FALSE);
+      print_result('Check Defaults: get_is_apps for FALSE', Ilo_Task.get_is_apps = FALSE);
       
-      Hotsos_Ilo_Task.set_is_apps(TRUE);
+      Ilo_Task.set_is_apps(TRUE);
       
-      print_result('Check After SET: get_is_apps for TRUE', Hotsos_Ilo_Task.get_is_apps = TRUE);
+      print_result('Check After SET: get_is_apps for TRUE', Ilo_Task.get_is_apps = TRUE);
      
      -- Set the is_apps back to Default.
      
-    Hotsos_Ilo_Task.set_is_apps(FALSE);
+    Ilo_Task.set_is_apps(FALSE);
      
    END ut_is_apps_set_get;
 
@@ -204,10 +204,10 @@ IS
       -- Execute test for DEFAULTS (FALSE, FALSE)
       -- Check get_TRACE for FALSE'
 
-      print_result ('Check Defaults: get_trace for FALSE', Hotsos_Ilo_Task.get_trace = FALSE);
+      print_result ('Check Defaults: get_trace for FALSE', Ilo_Task.get_trace = FALSE);
       -- Check get_write_wall_time for FALSE'
       print_result ('Check Defaults: get_write_wall_time for FALSE',
-                    Hotsos_Ilo_Task.get_write_wall_time = FALSE
+                    Ilo_Task.get_write_wall_time = FALSE
                    );
 
       IF (package_results)
@@ -216,7 +216,7 @@ IS
          v_trace := NULL;
          v_wall := NULL;
          -- Execute Test code
-         Hotsos_Ilo_Task.get_config (v_trace, v_wall);
+         Ilo_Task.get_config (v_trace, v_wall);
          -- Assert Success
          print_result ('Check if GET_CONFIG returns TRACE = FALSE',v_trace = FALSE);
          print_result ('CHECK if GET_CONFIG returns WALL = FALSE',v_wall = FALSE);
@@ -228,15 +228,15 @@ IS
       -- Assert success After the second SET_CONFIG, they should still be TRUE TRUE
 
       -- Set the initial values
-      Hotsos_Ilo_Task.set_config (TRACE => TRUE, write_wall_time => TRUE);
+      Ilo_Task.set_config (TRACE => TRUE, write_wall_time => TRUE);
       -- Set the initial values
-      Hotsos_Ilo_Task.set_config (TRACE => NULL, write_wall_time => NULL);
+      Ilo_Task.set_config (TRACE => NULL, write_wall_time => NULL);
       -- Assert Success
       print_result ('Check After SET: get_trace for TRUE',
-                    Hotsos_Ilo_Task.get_trace = FALSE
+                    Ilo_Task.get_trace = FALSE
                    );
       print_result ('Check After SET: get_write_wall_time for TRUE',
-                    Hotsos_Ilo_Task.get_write_wall_time = FALSE
+                    Ilo_Task.get_write_wall_time = FALSE
                    );
 
       -- Assert Success
@@ -246,7 +246,7 @@ IS
          v_trace := NULL;
          v_wall := NULL;
          -- Execute Test code
-         Hotsos_Ilo_Task.get_config (v_trace, v_wall);
+         Ilo_Task.get_config (v_trace, v_wall);
          -- Assert Success
          print_result ('Check After SET if GET_CONFIG returns TRACE = TRUE',
                        v_trace = FALSE
@@ -259,13 +259,13 @@ IS
       -- End of test
 
       -- Execute test code (TRUE, FALSE)
-      Hotsos_Ilo_Task.set_config (TRACE => TRUE, write_wall_time => FALSE);
+      Ilo_Task.set_config (TRACE => TRUE, write_wall_time => FALSE);
       -- Assert success
       print_result ('Check After SET: get_trace for TRUE',
-                    Hotsos_Ilo_Task.get_trace = FALSE
+                    Ilo_Task.get_trace = FALSE
                    );
       print_result ('Check After SET: get_write_wall_time for FALSE',
-                    Hotsos_Ilo_Task.get_write_wall_time = FALSE
+                    Ilo_Task.get_write_wall_time = FALSE
                    );
 
       -- Assert Success
@@ -275,7 +275,7 @@ IS
          v_trace := NULL;
          v_wall := NULL;
          -- Execute Test code
-         Hotsos_Ilo_Task.get_config (v_trace, v_wall);
+         Ilo_Task.get_config (v_trace, v_wall);
          -- Assert Success
          print_result ('Check After SET if GET_CONFIG returns TRACE = TRUE',
                        v_trace = FALSE
@@ -288,13 +288,13 @@ IS
       -- End of test
 
       -- Execute test code (TRUE, TRUE)
-      Hotsos_Ilo_Task.set_config (TRACE => TRUE, write_wall_time => TRUE);
+      Ilo_Task.set_config (TRACE => TRUE, write_wall_time => TRUE);
       -- Assert success
       print_result ('Check After SET: get_trace for TRUE',
-                    Hotsos_Ilo_Task.get_trace = FALSE
+                    Ilo_Task.get_trace = FALSE
                    );
       print_result ('Check After SET: get_write_wall_time for TRUE',
-                    Hotsos_Ilo_Task.get_write_wall_time = FALSE
+                    Ilo_Task.get_write_wall_time = FALSE
                    );
 
       -- Assert Success
@@ -304,7 +304,7 @@ IS
          v_trace := NULL;
          v_wall := NULL;
          -- Execute Test code
-         Hotsos_Ilo_Task.get_config (v_trace, v_wall);
+         Ilo_Task.get_config (v_trace, v_wall);
          -- Assert Success
          print_result ('Check After SET if GET_CONFIG returns TRACE = TRUE',
                        v_trace = FALSE
@@ -317,13 +317,13 @@ IS
       -- END TEST
 
       -- Execute test code (FALSE, TRUE)
-      Hotsos_Ilo_Task.set_config (TRACE => FALSE, write_wall_time => TRUE);
+      Ilo_Task.set_config (TRACE => FALSE, write_wall_time => TRUE);
       -- Assert success
       print_result ('Check After SET: get_trace for FALSE',
-                    Hotsos_Ilo_Task.get_trace = FALSE
+                    Ilo_Task.get_trace = FALSE
                    );
       print_result ('Check After SET: get_write_wall_time for TRUE',
-                    Hotsos_Ilo_Task.get_write_wall_time = FALSE
+                    Ilo_Task.get_write_wall_time = FALSE
                    );
 
       -- Assert Success
@@ -333,7 +333,7 @@ IS
          v_trace := NULL;
          v_wall := NULL;
          -- Execute Test code
-         Hotsos_Ilo_Task.get_config (v_trace, v_wall);
+         Ilo_Task.get_config (v_trace, v_wall);
          -- Assert Success
          print_result ('Check After SET if GET_CONFIG returns TRACE = FALSE',
                        v_trace = FALSE
@@ -346,13 +346,13 @@ IS
       -- End of test
 
       -- Execute test code (FALSE, FALSE)
-      Hotsos_Ilo_Task.set_config (TRACE => FALSE, write_wall_time => FALSE);
+      Ilo_Task.set_config (TRACE => FALSE, write_wall_time => FALSE);
       -- Assert success
       print_result ('Check After SET: get_trace for FALSE',
-                    Hotsos_Ilo_Task.get_trace = FALSE
+                    Ilo_Task.get_trace = FALSE
                    );
       print_result ('Check After SET: get_write_wall_time for FALSE',
-                    Hotsos_Ilo_Task.get_write_wall_time = FALSE
+                    Ilo_Task.get_write_wall_time = FALSE
                    );
 
       -- Assert Success
@@ -362,7 +362,7 @@ IS
          v_trace := NULL;
          v_wall := NULL;
          -- Execute Test code
-         Hotsos_Ilo_Task.get_config (v_trace, v_wall);
+         Ilo_Task.get_config (v_trace, v_wall);
          -- Assert Success
          print_result ('Check After SET if GET_CONFIG returns TRACE = FALSE',
                        v_trace = FALSE
@@ -389,20 +389,20 @@ IS
       v_tab_base.EXTEND;
       v_tab_base (v_tab_base.LAST) := v_rec_base;
       -- Now BEGIN THE TASK
-      Hotsos_Ilo_Task.begin_task (module         => 'MODULE1',
+      Ilo_Task.begin_task (module         => 'MODULE1',
                                   action         => 'ACTION1',
                                   client_id      => 'CLIENT1',
                                   COMMENT        => 'COMMENT1'
                                  );
       -- CHECK THE CURRENT TASK
-      v_rec_return := Hotsos_Ilo_Task.get_current_task;
+      v_rec_return := Ilo_Task.get_current_task;
       -- Assert success
       print_result ('V_REC_BAS = V_REC_RETURN : Single Level',
-                    Ut_Hotsos_Ilo_Task.test_stack_rec_t_equal (v_rec_base,v_rec_return) = TRUE);
+                    Ut_Ilo_Task.test_stack_rec_t_equal (v_rec_base,v_rec_return) = TRUE);
       -- CHECK THE CURRENT STACK
-      v_tab_return := Hotsos_Ilo_Task.get_task_stack;
+      v_tab_return := Ilo_Task.get_task_stack;
       print_result ('V_TAB_BAS = V_TAB_RETURN : Single Level',
-                    Ut_Hotsos_Ilo_Task.test_stack_eq (v_tab_base, v_tab_return) = TRUE);
+                    Ut_Ilo_Task.test_stack_eq (v_tab_base, v_tab_return) = TRUE);
 
       -- Add a new task and check again.
       IF (package_results)
@@ -415,20 +415,20 @@ IS
          v_tab_base.EXTEND;
          v_tab_base (v_tab_base.LAST) := v_rec_base;
          -- Execute the instrumentation
-         Hotsos_Ilo_Task.begin_task (module         => 'MODULE2',
+         Ilo_Task.begin_task (module         => 'MODULE2',
                                      action         => 'ACTION2',
                                      client_id      => 'CLIENT2',
                                      COMMENT        => 'COMMENT2'
                                     );
          -- CHECK THE CURRENT TASK
-         v_rec_return := Hotsos_Ilo_Task.get_current_task;
+         v_rec_return := Ilo_Task.get_current_task;
          -- Assert success
          print_result ('V_REC_BAS = V_REC_RETURN : Two Levels',
-                       Ut_Hotsos_Ilo_Task.test_stack_rec_t_equal (v_rec_base,v_rec_return) = TRUE);
+                       Ut_Ilo_Task.test_stack_rec_t_equal (v_rec_base,v_rec_return) = TRUE);
          -- CHECK THE CURRENT STACK
-         v_tab_return := Hotsos_Ilo_Task.get_task_stack;
+         v_tab_return := Ilo_Task.get_task_stack;
          print_result ('V_TAB_BAS = V_TAB_RETURN : Two Levels',
-                       Ut_Hotsos_Ilo_Task.test_stack_eq (v_tab_base, v_tab_return) = TRUE);
+                       Ut_Ilo_Task.test_stack_eq (v_tab_base, v_tab_return) = TRUE);
       END IF;
 
       -- Add a third task and check again.
@@ -442,20 +442,20 @@ IS
          v_tab_base.EXTEND;
          v_tab_base (v_tab_base.LAST) := v_rec_base;
          -- Execute the instrumentation
-         Hotsos_Ilo_Task.begin_task (module         => 'MODULE3',
+         Ilo_Task.begin_task (module         => 'MODULE3',
                                      action         => 'ACTION3',
                                      client_id      => 'CLIENT3',
                                      COMMENT        => 'COMMENT3'
                                     );
          -- CHECK THE CURRENT TASK
-         v_rec_return := Hotsos_Ilo_Task.get_current_task;
+         v_rec_return := Ilo_Task.get_current_task;
          -- Assert success
          print_result ('V_REC_BAS = V_REC_RETURN : Three Levels',
-                       Ut_Hotsos_Ilo_Task.test_stack_rec_t_equal (v_rec_base,v_rec_return) = TRUE);
+                       Ut_Ilo_Task.test_stack_rec_t_equal (v_rec_base,v_rec_return) = TRUE);
          -- CHECK THE CURRENT STACK
-         v_tab_return := Hotsos_Ilo_Task.get_task_stack;
+         v_tab_return := Ilo_Task.get_task_stack;
          print_result ('V_TAB_BAS = V_TAB_RETURN : Three Levels',
-                       Ut_Hotsos_Ilo_Task.test_stack_eq (v_tab_base, v_tab_return) = TRUE);
+                       Ut_Ilo_Task.test_stack_eq (v_tab_base, v_tab_return) = TRUE);
       END IF;
 
       -- END a task and check again
@@ -468,32 +468,32 @@ IS
          v_rec_base.COMMENT := 'COMMENT2';
          v_tab_base.TRIM;
          -- Execute the instrumentation
-         Hotsos_Ilo_Task.end_task;
+         Ilo_Task.end_task;
          -- CHECK THE CURRENT TASK
-         v_rec_return := Hotsos_Ilo_Task.get_current_task;
+         v_rec_return := Ilo_Task.get_current_task;
          -- Assert success
          print_result ('V_REC_BAS = V_REC_RETURN : Two Levels After End',
-                       Ut_Hotsos_Ilo_Task.test_stack_rec_t_equal (v_rec_base,v_rec_return) = TRUE);
+                       Ut_Ilo_Task.test_stack_rec_t_equal (v_rec_base,v_rec_return) = TRUE);
          -- CHECK THE CURRENT STACK
-         v_tab_return := Hotsos_Ilo_Task.get_task_stack;
+         v_tab_return := Ilo_Task.get_task_stack;
          print_result ('V_TAB_BAS = V_TAB_RETURN : Two Levels After End',
-                       Ut_Hotsos_Ilo_Task.test_stack_eq (v_tab_base, v_tab_return) = TRUE);
+                       Ut_Ilo_Task.test_stack_eq (v_tab_base, v_tab_return) = TRUE);
       END IF;
 
       -- END all tasks and check again
       IF (package_results)
       THEN
          -- Execute the instrumentation
-         Hotsos_Ilo_Task.end_all_tasks;
+         Ilo_Task.end_all_tasks;
          -- CHECK THE CURRENT TASK
-         v_rec_return := Hotsos_Ilo_Task.get_current_task;
+         v_rec_return := Ilo_Task.get_current_task;
          -- Assert success
          print_result ('V_REC_EMPTY = V_REC_RETURN : AFTER END_ALL_TASKS',
-                       Ut_Hotsos_Ilo_Task.test_stack_rec_t_equal (v_rec_empty,v_rec_return) = TRUE);
+                       Ut_Ilo_Task.test_stack_rec_t_equal (v_rec_empty,v_rec_return) = TRUE);
          -- CHECK THE CURRENT STACK
-         v_tab_return := Hotsos_Ilo_Task.get_task_stack;
+         v_tab_return := Ilo_Task.get_task_stack;
          print_result ('V_TAB_EMPTY = V_TAB_RETURN : AFTER END_ALL_TASKS',
-                       Ut_Hotsos_Ilo_Task.test_stack_eq (v_tab_empty,v_tab_return) = TRUE);
+                       Ut_Ilo_Task.test_stack_eq (v_tab_empty,v_tab_return) = TRUE);
       END IF;
    -- End of test
    END ut_test_tasks;
@@ -516,24 +516,24 @@ IS
        end if;
      end debug;
    BEGIN
-      debug('-- BEGIN ut_hotsos_ilo');
+      debug('-- BEGIN ut_ilo_task');
 
       dbms_output.put_line(rpad('=',60,'='));
-      dbms_output.put_line('HOTSOS_ILO_TASK Unit tests for version '||hotsos_ilo_task.get_version);
+      dbms_output.put_line('Ilo_Task Unit tests for version '||Ilo_Task.get_version);
       dbms_output.put_line(rpad('=',60,'='));
 
       PACKAGE_RESULTS := TRUE;
 
       /* Process the test Procedures */
-      debug('++ BEGIN ut_hotsos_ilo_task.ut_nesting_level_set_get');
+      debug('++ BEGIN ut_Ilo_Task.ut_nesting_level_set_get');
       ut_nesting_level_set_get;
-      debug('++ BEGIN ut_hotsos_ilo_task.ut_is_apps_set_get');
+      debug('++ BEGIN ut_Ilo_Task.ut_is_apps_set_get');
       ut_is_apps_set_get;
-      debug('++ BEGIN ut_hotsos_ilo_task.ut_config_set_get');
+      debug('++ BEGIN ut_Ilo_Task.ut_config_set_get');
       ut_config_set_get;
       -- Turn on tracing for everything
-      hotsos_ilo_timer.set_mark_all_tasks_interesting(true);
-      debug('++ BEGIN ut_hotsos_ilo_task.ut_test_tasks');
+      ilo_timer.set_mark_all_tasks_interesting(true);
+      debug('++ BEGIN ut_Ilo_Task.ut_test_tasks');
       ut_test_tasks;
 
       /* End of Test Procedure List */
@@ -543,18 +543,18 @@ IS
 
       dbms_output.put_line(rpad('=',60,'='));
       if package_results then
-        dbms_output.put_line('HOTSOS_ILO_TASK Unit tests completed successfully.');
+        dbms_output.put_line('Ilo_Task Unit tests completed successfully.');
       else
-        dbms_output.put_line('HOTSOS_ILO_TASK Unit tests completed with failures.');
+        dbms_output.put_line('Ilo_Task Unit tests completed with failures.');
       end if;
       dbms_output.put_line(rpad('=',60,'='));
 
       -- Reset 
-      hotsos_ilo_timer.set_mark_all_tasks_interesting(false);
+      ilo_timer.set_mark_all_tasks_interesting(false);
       
-      debug('-- END ut_hotsos_ilo');
+      debug('-- END ut_ilo_task');
 
       RETURN (package_results);
    END;
-END Ut_Hotsos_Ilo_Task;
+END Ut_Ilo_Task;
 /

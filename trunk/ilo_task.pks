@@ -140,20 +140,22 @@ CREATE OR REPLACE PACKAGE Ilo_Task AS
    --
    --   %param sequence      Internally generated sequence number used to track an occurance of a specific Module/Action. Will be NULL unless you are using the extended version (comming soon)
    --   %param trc_active    Is 10046 level trace currently activated for this task.
-   --   %param module		 Name of module that is currently running.
-   --   %param action		 Name of current action within the current module. If you do not want to specify an action, this value should be NULL.
+   --   %param module        Name of module that is currently running.
+   --   %param action        Name of current action within the current module. If you do not want to specify an action, this value should be NULL.
    --   %param client_id     The client_id argument will also be used to set CLIENT_IDENTIFIER column. The CLIENT_IDENTIFIER column has 64 bytes.
    --   %param comment       A free form comment
-   --   %param bnl			 Beyond the currently set Nesting Level?
+   --   %param bnl           Beyond the currently set Nesting Level?
+   --   %param widget_count  Count of widgets processed during the task
    TYPE stack_rec_t IS RECORD(
-       SEQUENCE   NUMBER
-      ,trc_active BOOLEAN
+       SEQUENCE     NUMBER
+      ,trc_active   BOOLEAN
       ,rtime_active BOOLEAN
-      ,module     VARCHAR2(255)
-      ,action     VARCHAR2(255)
-      ,client_id  VARCHAR2(255)
-      ,COMMENT    VARCHAR2(255)
-      ,BNL        BOOLEAN);
+      ,module       VARCHAR2(255)
+      ,action       VARCHAR2(255)
+      ,client_id    VARCHAR2(255)
+      ,COMMENT      VARCHAR2(255)
+      ,BNL          BOOLEAN
+      ,widget_count NUMBER);
 
    -- STACK_T is a TYPE used to hold the calls stack returned from GET_TASK_STACK
    TYPE stack_t IS TABLE OF stack_rec_t;
@@ -344,8 +346,9 @@ CREATE OR REPLACE PACKAGE Ilo_Task AS
    ---------------------------------------------------------------------
    --   Mark the end of an instrumented task.
    --
-   --   %param error_num   Any non-zero integer will be reflected in the timer table as an error.
-   --   %param end_time    The (optional) end time for the task.
+   --   %param error_num      Any non-zero integer will be reflected in the timer table as an error.
+   --   %param end_time       The (optional) end time for the task.
+   --   %param widget_count   The (optional) widget count for the task.
    --
    --   %usage_notes
    --   <li>Expects that the BEGIN_TASK procedure had been run prior to execution.
@@ -355,7 +358,7 @@ CREATE OR REPLACE PACKAGE Ilo_Task AS
    --   <li>In functions, should occur right before all "RETURN" statements (which should also be in the EXCEPTION blocks).
    --   <li>Pops the MODULE/ACTION off the stack created and pushed on too the stack created by the ILO_TASK.BEGIN_TASK to retrieve the previous MODULE/ACTION. If it is at the last END_TASK of the BEGIN_TASK/END_TASK pairs then it will perform a DBMS_APPLICATION_INFO.SET_MODULE(module=>NULL,action=>NULL).
    --   <li>Writes a line to the trace file in this format:
-   --   ILO_TASK.END_TASK[Module Name][Action Name][Client Id][Comments]
+   --   ILO_TASK.END_TASK[Module Name][Action Name][Client Id][Comments][Widget Count]
    --   <li>The END_TIME can be set explicitly to sync up with the application server rather than the database. Ensure that the time is also sent in BEGIN_TASK to avoid appearance of time travel...
    --
    --   %examples
@@ -383,7 +386,7 @@ CREATE OR REPLACE PACKAGE Ilo_Task AS
    --     END;
    --   </CODE><BR>
    ---------------------------------------------------------------------
-   PROCEDURE end_task(error_num IN PLS_INTEGER DEFAULT 0, end_time IN timestamp DEFAULT NULL);
+   PROCEDURE end_task(error_num IN PLS_INTEGER DEFAULT 0, end_time IN timestamp DEFAULT NULL, widget_count IN NUMBER DEFAULT NULL);
 
    ---------------------------------------------------------------------
    --< end_all_tasks >
@@ -414,13 +417,14 @@ CREATE OR REPLACE PACKAGE Ilo_Task AS
    --   DECLARE
    --     l_record ILO_TASK.stack_rec_t;
    --   BEGIN
-   --     l_record := ILO_TASK.GET_TASK();
+   --     l_record := ILO_TASK.GET_CURRENT_TASK();
    --     IF l_record.module IS NOT NULL THEN
-   --         dbms_output.put_line('sequence =>'     || l_list(i).sequence
-   --                         || ', module =>'       || l_list(i).module
-   --                         || ', action =>'       || l_list(i).action
-   --                         || ', client_id =>'    || l_list(i).client_id
-   --                         || ', comment =>'      || l_list(i).comment);
+   --         dbms_output.put_line('sequence =>'     || l_record.sequence
+   --                         || ', module =>'       || l_record.module
+   --                         || ', action =>'       || l_record.action
+   --                         || ', client_id =>'    || l_record.client_id
+   --                         || ', comment =>'      || l_record.comment
+   --                         || ', widgets =>'      || l_record.widget_count);
    --     ELSE
    --       dbms_output.put_line('The record contains no values');
    --     END IF;
@@ -430,7 +434,7 @@ CREATE OR REPLACE PACKAGE Ilo_Task AS
    FUNCTION get_current_task RETURN stack_rec_t;
 
    ---------------------------------------------------------------------
-   --< Get_current_task_stack>
+   --< Get_task_stack>
    ---------------------------------------------------------------------
    --   Return a list of records representing all the currently active task contexts. There will be more than one record returned when nested tasks are active.
    --
@@ -452,7 +456,8 @@ CREATE OR REPLACE PACKAGE Ilo_Task AS
    --                         || ', module =>'       || l_list(i).module
    --                         || ', action =>'       || l_list(i).action
    --                         || ', client_id =>'    || l_list(i).client_id
-   --                         || ', comment =>'      || l_list(i).comment);
+   --                         || ', comment =>'      || l_list(i).comment
+   --                         || ', widgets =>'      || l_list(i).widget_count);
    --       END LOOP;
    --     ELSE
    --       dbms_output.put_line('No elements in the collection');

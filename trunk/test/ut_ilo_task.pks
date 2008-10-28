@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE Ut_Hotsos_Ilo_Task IS
+CREATE OR REPLACE PACKAGE Ut_Ilo_Task IS
 ---------------------------------------------------------------------
 --
 --  Instrumentation Library for Oracle
@@ -26,5 +26,5 @@ CREATE OR REPLACE PACKAGE Ut_Hotsos_Ilo_Task IS
    /* Main Entry Point of the package */
    FUNCTION run_tests
       RETURN BOOLEAN;
-END Ut_Hotsos_Ilo_Task;
+END Ut_Ilo_Task;
 /
