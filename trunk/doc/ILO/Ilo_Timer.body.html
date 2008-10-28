@@ -2,23 +2,22 @@
 <HTML>
  <HEAD>
  <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
- <TITLE>Package body HOTSOS.Hotsos_Ilo_Timer</TITLE>
+ <TITLE>Package body Ilo_Timer</TITLE>
  <META name="object" content="PACKAGE BODY">
- <META name="name" content="HOTSOS.Hotsos_Ilo_Timer">
+ <META name="name" content="ILO.Ilo_Timer">
  <META name="description" content="Provides a mechanism for inserting task begin and end times into a local table.">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
-<TD><P ALIGN="LEFT"><STRONG><SMALL>HOTSOS</SMALL></STRONG></TD>
+<TD><P ALIGN="LEFT"><STRONG><SMALL>ILO</SMALL></STRONG></TD>
 <TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
-<P CLASS="MAIN_TITLE">Package body HOTSOS.Hotsos_Ilo_Timer</P>
+<P CLASS="MAIN_TITLE">Package body Ilo_Timer</P>
 Provides a mechanism for inserting task begin and end times into a local table.<br>
 &nbsp;<br>
 &nbsp;<br>
-&nbsp;Instrumentation Library for Oracle<br>
-&nbsp;Copyright (C) 2006 - 2008&nbsp; Method&nbsp;R Corporation. All rights reserved.<br>
+Instrumentation Library for Oracle Copyright (C) 2006 - 2008&nbsp; Method R Corporation. All rights reserved.<br>
 &nbsp;<br>
 This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.<br>
 &nbsp;<br>
@@ -126,7 +125,6 @@ begin_timed_task
 </P>
 <PRE CLASS="DECL_TEXT">
 Function begin_timed_task(p_begin_time timestamp) RETURN NUMBER
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; BEGIN_TIMED_TASK &gt;<br>
@@ -155,10 +153,9 @@ NUMBER&nbsp;&nbsp;&nbsp; This number is used as the &quot;ID&quot; of the Timed 
 end_timed_task
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure end_timed_task(p_stack_rec <A HREF="../HOTSOS/Hotsos_Ilo_Task.html#stack_rec_t">Hotsos_Ilo_Task.stack_rec_t</A>,
+Procedure end_timed_task(p_stack_rec ilo_task.stack_rec_t,
                          p_error_num PLS_INTEGER default 0,
                          p_end_time  timestamp DEFAULT NULL)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; END_TIMED_TASK &gt;<br>
@@ -204,13 +201,12 @@ get_version
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_version RETURN NUMBER
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_version &gt;<br>
 &nbsp;<br>
 &nbsp;<br>
-&nbsp; Purpose: Returns the version of the HOTSOS_ILO_TIMER PACKAGE<br>
+&nbsp; Purpose: Returns the version of the ILO_TIMER PACKAGE<br>
 
 <BR>
 </P>
@@ -221,7 +217,7 @@ Returns
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-NUMBER&nbsp;&nbsp;&nbsp; 	  NUMBER value that indicates version of ILO<br>
+NUMBER&nbsp;&nbsp;&nbsp; NUMBER value that indicates version of ILO<br>
 
 </TD></TR>
 </TABLE>
@@ -233,7 +229,6 @@ flush_ilo_runs
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure flush_ilo_runs
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; FLUSH_ILO_RUNS &gt;<br>
@@ -254,12 +249,11 @@ Procedure GET_CONFIG(p_module   IN VARCHAR2,
                      p_trace    OUT BOOLEAN,
                      p_walltime OUT BOOLEAN,
                      p_rtime    OUT BOOLEAN)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_config &gt;<br>
 &nbsp;<br>
-&nbsp; Purpose: is used by HOTSOS_ILO.BEGIN_TASK to determine whether a MODULE/ACTION pair<br>
+&nbsp; Purpose: is used by ILO.BEGIN_TASK to determine whether a MODULE/ACTION pair<br>
 &nbsp; Should be traced, and to what nesting level it should store detail.<br>
 
 <BR>
@@ -325,7 +319,6 @@ refresh_schedule
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure refresh_schedule
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; Refresh_Schedule &gt;<br>
@@ -346,7 +339,6 @@ set_mark_all_tasks_interesting
 <PRE CLASS="DECL_TEXT">
 Procedure set_mark_all_tasks_interesting(mark_all_tasks_interesting boolean,
                                          ignore_schedule            boolean DEFAULT FALSE)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; set_mark_all_tasks_interesting &gt;<br>
@@ -404,7 +396,6 @@ get_mark_all_tasks_interesting
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_mark_all_tasks_interesting RETURN BOOLEAN
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_mark_all_tasks_interesting &gt;<br>
@@ -457,7 +448,6 @@ get_ignore_schedule
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_ignore_schedule RETURN BOOLEAN
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_ignore_schedule &gt;<br>

@@ -2,23 +2,22 @@
 <HTML>
  <HEAD>
  <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
- <TITLE>Package body HOTSOS.Hotsos_Ilo_Task</TITLE>
+ <TITLE>Package body Ilo_Task</TITLE>
  <META name="object" content="PACKAGE BODY">
- <META name="name" content="HOTSOS.Hotsos_Ilo_Task">
+ <META name="name" content="ILO.Ilo_Task">
  <META name="description" content="Contains procedures for defining tasks, setting the MODULE, ACTION, and CLIENT_ID, and for measuring tasks using SQL trace.">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
-<TD><P ALIGN="LEFT"><STRONG><SMALL>HOTSOS</SMALL></STRONG></TD>
+<TD><P ALIGN="LEFT"><STRONG><SMALL>ILO</SMALL></STRONG></TD>
 <TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
-<P CLASS="MAIN_TITLE">Package body HOTSOS.Hotsos_Ilo_Task</P>
+<P CLASS="MAIN_TITLE">Package body Ilo_Task</P>
 Contains procedures for defining tasks, setting the MODULE, ACTION, and CLIENT_ID, and for measuring tasks using SQL trace.<br>
 &nbsp;<br>
 &nbsp;<br>
-&nbsp;Instrumentation Library for Oracle<br>
-&nbsp;Copyright (C) 2006 - 2008&nbsp; Method&nbsp;R Corporation. All rights reserved.<br>
+Instrumentation Library for Oracle Copyright (C) 2006 - 2008&nbsp; Method R Corporation. All rights reserved.<br>
 &nbsp;<br>
 This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.<br>
 &nbsp;<br>
@@ -252,7 +251,6 @@ process_string
 </P>
 <PRE CLASS="DECL_TEXT">
 Function process_string(p_string IN VARCHAR2) RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; Process_String &gt;<br>
@@ -276,7 +274,6 @@ set_is_apps
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure set_is_apps(is_apps boolean)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; set_is_apps &gt;<br>
@@ -320,7 +317,6 @@ get_is_apps
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_is_apps RETURN boolean
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_is_apps &gt;<br>
@@ -373,7 +369,6 @@ set_nesting_level
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure set_nesting_level(nesting_level IN NUMBER)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; set_nesting_level &gt;<br>
@@ -383,7 +378,7 @@ Procedure set_nesting_level(nesting_level IN NUMBER)
 &nbsp;<br>
 &nbsp;<br>
 &nbsp; Purpose: This procedure was used to set the nesting level to be used by ILO to track statistics and emit trace data.<br>
-&nbsp; <A HREF="../HOTSOS/Hotsos_Ilo_Task.html#begin_task">HOTSOS_ILO_TASK.BEGIN_TASK</A> now calls <A HREF="../HOTSOS/Hotsos_Ilo_Timer.html#GET_CONFIG">HOTSOS_ILO_TIMER.GET_CONFIG</A> to determine the appropriate nesting level.<br>
+&nbsp; <A HREF=#begin_task>ILO_TASK.BEGIN_TASK</A> now calls ILO_TIMER.GET_CONFIG to determine the appropriate nesting level.<br>
 &nbsp;<br>
 &nbsp; AS OF 2.0, this procedure has no effect.<br>
 
@@ -396,7 +391,6 @@ get_nesting_level
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_nesting_level RETURN NUMBER
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_nesting_level &gt;<br>
@@ -451,7 +445,6 @@ set_config
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure set_config(TRACE IN BOOLEAN, write_wall_time IN BOOLEAN)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; set_config &gt;<br>
@@ -460,7 +453,7 @@ Procedure set_config(TRACE IN BOOLEAN, write_wall_time IN BOOLEAN)
 &nbsp; DEPRECATED AS OF 2.0<br>
 &nbsp;<br>
 &nbsp; Purpose: This procedure was used to express the user's intention to begin tracing.<br>
-&nbsp; HOTSOS_ILO.BEGIN_TASK now calls ILO_TIMER.GET_CONFIG to determine whether to trace or not.<br>
+&nbsp; ILO.BEGIN_TASK now calls ILO_TIMER.GET_CONFIG to determine whether to trace or not.<br>
 &nbsp;<br>
 &nbsp; AS OF 2.0, this procedure calls the new SET_MARK_ALL_TASKS_INTERESTING procedure.<br>
 &nbsp; This is only temporary, and will be phased out in future release.<br>
@@ -474,7 +467,6 @@ get_config
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure get_config(TRACE OUT BOOLEAN, write_wall_time OUT BOOLEAN)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_config &gt;<br>
@@ -499,7 +491,6 @@ get_trace
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_trace RETURN BOOLEAN
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_trace &gt;<br>
@@ -520,7 +511,6 @@ get_write_wall_time
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_write_wall_time RETURN BOOLEAN
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_write_wall_time &gt;<br>
@@ -545,7 +535,6 @@ Procedure begin_task(module     IN VARCHAR2 DEFAULT NULL,
                      client_id  IN VARCHAR2 DEFAULT NULL,
                      COMMENT    IN VARCHAR2 DEFAULT NULL,
                      begin_time IN TIMESTAMP default null)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; begin_task &gt;<br>
@@ -603,7 +592,7 @@ Examples
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Here is an instrumented block from an HR application:<BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CREATE or replace PROCEDURE add_employee(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salary NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; manager NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; title VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; department NUMBER) AS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOTSOS_ILO_TASK.BEGIN_TASK(module =&gt; 'Human Resources', action =&gt; 'Adding Employees');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO emp<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ename, empno, sal, mgr, job, hiredate, comm, deptno)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (name, emp_seq.nextval, salary, manager, title, SYSDATE,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission, department);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOTSOS_ILO_TASK.END_TASK;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXCEPTION<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN OTHERS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('Exception thrown');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOTSOS_ILO_TASK.END_TASK(error_num =&gt;SQLCODE);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
+Here is an instrumented block from an HR application:<BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CREATE or replace PROCEDURE add_employee(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salary NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; manager NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; title VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; department NUMBER) AS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.BEGIN_TASK(module =&gt; 'Human Resources', action =&gt; 'Adding Employees');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO emp<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ename, empno, sal, mgr, job, hiredate, comm, deptno)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (name, emp_seq.nextval, salary, manager, title, SYSDATE,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission, department);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXCEPTION<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN OTHERS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('Exception thrown');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK(error_num =&gt;SQLCODE);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
 
 </TD></TR>
 </TABLE>
@@ -615,7 +604,7 @@ Usage Notes
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<li>Marks the beginning of a unit of work. Should be placed right after the &quot;BEGIN&quot; in a procedure or function definition. <li>Performs, at a minimum, a DBMS_APPLICATION_INFO.SET_MODULE(module, action). <li>Writes a line to the trace file in this format: HOTSOS_ILO_TASK.BEGIN_TASK[Sequence][Module Name][Action Name][Client Id][Comments] <li>Pushes the MODULE/ACTION on to a stack along with whether tracing is needed for the MODULE/ACTION. <li>The MODULE could be name of Package.Procedure or the name of a form. <li>If the MODULE is NULL and the MODULE of the parent is currently set, then the MODULE will inherit its parent task's MODULE. If the MODULE is NULL and there is no parent task, then the MODULE will be set to &quot;No Module Specified&quot;. <li>If the ACTION is NULL and the ACTION of the parent is currently set, then the ACTION will inherit its parent task's ACTION. If the ACTION is NULL and there is no parent task, then the ACTION will be 'No Action Specified'. <li>The ACTION should be the business event that is taking place. For example, 'Creating Sales Orders'. This policy makes trying to correlate database statistics to business functions much easier. <li>The CLIENT_IDENTIFIER should be more technical information or commentary that will be displayed in the V$SESSION view when this BEGIN_TASK is executed. <li>If the CLIENT_IDENTIFIER has not been set then a the default client_id will be set to: &lt;Client's OS User&gt;~&lt;Client's IP Address&gt;~&lt;Client's program&gt;~&lt;Service being accessed&gt;. For example, if JSmith is on a PC at IP address 192.168.1.40, using SQL*Plus to access the instance through the service name ORCL10G, then the default client identifier will be: <CODE>JSmith~192.168.1.40~SQLPLUS.exe~ORCL10G</CODE> <li>The BEGIN_TIME can be set explicitly to sync up with the application server rather than the database. Ensure that the time is also sent in <A HREF=#end_task>END_TASK</A> to avoid appearance of time travel...<br>
+<li>Marks the beginning of a unit of work. Should be placed right after the &quot;BEGIN&quot; in a procedure or function definition. <li>Performs, at a minimum, a DBMS_APPLICATION_INFO.SET_MODULE(module, action). <li>Writes a line to the trace file in this format: ILO_TASK.BEGIN_TASK[Sequence][Module Name][Action Name][Client Id][Comments] <li>Pushes the MODULE/ACTION on to a stack along with whether tracing is needed for the MODULE/ACTION. <li>The MODULE could be name of Package.Procedure or the name of a form. <li>If the MODULE is NULL and the MODULE of the parent is currently set, then the MODULE will inherit its parent task's MODULE. If the MODULE is NULL and there is no parent task, then the MODULE will be set to &quot;No Module Specified&quot;. <li>If the ACTION is NULL and the ACTION of the parent is currently set, then the ACTION will inherit its parent task's ACTION. If the ACTION is NULL and there is no parent task, then the ACTION will be 'No Action Specified'. <li>The ACTION should be the business event that is taking place. For example, 'Creating Sales Orders'. This policy makes trying to correlate database statistics to business functions much easier. <li>The CLIENT_IDENTIFIER should be more technical information or commentary that will be displayed in the V$SESSION view when this BEGIN_TASK is executed. <li>If the CLIENT_IDENTIFIER has not been set then a the default client_id will be set to: &lt;Client's OS User&gt;~&lt;Client's IP Address&gt;~&lt;Client's program&gt;~&lt;Service being accessed&gt;. For example, if JSmith is on a PC at IP address 192.168.1.40, using SQL*Plus to access the instance through the service name ORCL10G, then the default client identifier will be: <CODE>JSmith~192.168.1.40~SQLPLUS.exe~ORCL10G</CODE> <li>The BEGIN_TIME can be set explicitly to sync up with the application server rather than the database. Ensure that the time is also sent in <A HREF=#end_task>END_TASK</A> to avoid appearance of time travel...<br>
 
 </TD></TR>
 </TABLE>
@@ -627,7 +616,6 @@ get_current_task
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_current_task RETURN stack_rec_t
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; Get_current_task&gt;<br>
@@ -643,7 +631,7 @@ Examples
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-To print out the value of the current record: <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp; DECLARE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_record HOTSOS_ILO_TASK.stack_rec_t;<br>&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_record := HOTSOS_ILO_TASK.GET_TASK();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IF l_record.module IS NOT NULL THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('sequence =&gt;'&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).sequence<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', module =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).module<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', action =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).action<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', client_id =&gt;'&nbsp;&nbsp;&nbsp; || l_list(i).client_id<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', comment =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).comment);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('The record contains no values');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END IF;<br>&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
+To print out the value of the current record: <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp; DECLARE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_record ILO_TASK.stack_rec_t;<br>&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_record := ILO_TASK.GET_TASK();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IF l_record.module IS NOT NULL THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('sequence =&gt;'&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).sequence<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', module =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).module<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', action =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).action<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', client_id =&gt;'&nbsp;&nbsp;&nbsp; || l_list(i).client_id<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', comment =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).comment);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('The record contains no values');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END IF;<br>&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
 
 </TD></TR>
 </TABLE>
@@ -666,8 +654,7 @@ Usage Notes
 get_task_stack
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_task_stack RETURN <A HREF="../HOTSOS/Hotsos_Ilo_Task.html#stack_t">Hotsos_Ilo_Task.stack_t</A>
-
+Function get_task_stack RETURN ilo_task.stack_t
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; Get_current_task_stack&gt;<br>
@@ -683,7 +670,7 @@ Examples
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-To print out all values in the current stack: <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp; DECLARE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_list HOTSOS_ILO_TASK.stack_t;<br>&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_list := HOTSOS_ILO_TASK.GET_TASK_STACK();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IF l_list.count &gt; 0 THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FOR i in 1 .. l_list.count LOOP<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('sequence =&gt;'&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).sequence<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', module =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).module<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', action =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).action<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', client_id =&gt;'&nbsp;&nbsp;&nbsp; || l_list(i).client_id<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', comment =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).comment);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END LOOP;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('No elements in the collection');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END IF;<br>&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
+To print out all values in the current stack: <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp; DECLARE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_list ILO_TASK.stack_t;<br>&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_list := ILO_TASK.GET_TASK_STACK();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IF l_list.count &gt; 0 THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FOR i in 1 .. l_list.count LOOP<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('sequence =&gt;'&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).sequence<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', module =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).module<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', action =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).action<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', client_id =&gt;'&nbsp;&nbsp;&nbsp; || l_list(i).client_id<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', comment =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).comment);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END LOOP;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('No elements in the collection');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END IF;<br>&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
 
 </TD></TR>
 </TABLE>
@@ -708,7 +695,6 @@ end_task
 <PRE CLASS="DECL_TEXT">
 Procedure end_task(error_num IN PLS_INTEGER DEFAULT 0,
                    end_time  in TIMESTAMP default null)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; end_task &gt;<br>
@@ -745,7 +731,7 @@ Examples
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-An example would be a procedure used in the HR application to add employees: <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CREATE or replace PROCEDURE add_employee(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salary NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; manager NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; title VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; department NUMBER) AS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOTSOS_ILO_TASK.BEGIN_TASK(module =&gt; 'Human Resources', action =&gt; 'Adding Employees');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO emp<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ename, empno, sal, mgr, job, hiredate, comm, deptno)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (name, emp_seq.nextval, salary, manager, title, SYSDATE,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission, department);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOTSOS_ILO_TASK.END_TASK;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXCEPTION<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN OTHERS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('Exception thrown');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOTSOS_ILO_TASK.END_TASK(error_num =&gt;SQLCODE);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
+An example would be a procedure used in the HR application to add employees: <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CREATE or replace PROCEDURE add_employee(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salary NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; manager NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; title VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; department NUMBER) AS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.BEGIN_TASK(module =&gt; 'Human Resources', action =&gt; 'Adding Employees');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO emp<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ename, empno, sal, mgr, job, hiredate, comm, deptno)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (name, emp_seq.nextval, salary, manager, title, SYSDATE,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission, department);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXCEPTION<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN OTHERS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('Exception thrown');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK(error_num =&gt;SQLCODE);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
 
 </TD></TR>
 </TABLE>
@@ -757,7 +743,7 @@ Usage Notes
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<li>Expects that the <A HREF=#begin_task>BEGIN_TASK</A> procedure had been run prior to execution. <li>Marks the end of a task begun by <A HREF=#begin_task>BEGIN_TASK</A>. <li>In procedures, should be placed right before the &quot;END&quot; and &quot;EXCEPTION&quot; statements. <li>In &quot;EXCEPTION&quot; statements it would be best to pass the SQLCODE as the error_num. <li>In functions, should occur right before all &quot;RETURN&quot; statements (which should also be in the EXCEPTION blocks). <li>Pops the MODULE/ACTION off the stack created and pushed on too the stack created by the HOTSOS_ILO_TASK.BEGIN_TASK to retrieve the previous MODULE/ACTION. If it is at the last END_TASK of the BEGIN_TASK/END_TASK pairs then it will perform a DBMS_APPLICATION_INFO.SET_MODULE(module=&gt;NULL,action=&gt;NULL). <li>Writes a line to the trace file in this format: HOTSOS_ILO_TASK.END_TASK[Module Name][Action Name][Client Id][Comments] <li>The END_TIME can be set explicitly to sync up with the application server rather than the database. Ensure that the time is also sent in <A HREF=#begin_task>BEGIN_TASK</A> to avoid appearance of time travel...<br>
+<li>Expects that the <A HREF=#begin_task>BEGIN_TASK</A> procedure had been run prior to execution. <li>Marks the end of a task begun by <A HREF=#begin_task>BEGIN_TASK</A>. <li>In procedures, should be placed right before the &quot;END&quot; and &quot;EXCEPTION&quot; statements. <li>In &quot;EXCEPTION&quot; statements it would be best to pass the SQLCODE as the error_num. <li>In functions, should occur right before all &quot;RETURN&quot; statements (which should also be in the EXCEPTION blocks). <li>Pops the MODULE/ACTION off the stack created and pushed on too the stack created by the ILO_TASK.BEGIN_TASK to retrieve the previous MODULE/ACTION. If it is at the last END_TASK of the BEGIN_TASK/END_TASK pairs then it will perform a DBMS_APPLICATION_INFO.SET_MODULE(module=&gt;NULL,action=&gt;NULL). <li>Writes a line to the trace file in this format: ILO_TASK.END_TASK[Module Name][Action Name][Client Id][Comments] <li>The END_TIME can be set explicitly to sync up with the application server rather than the database. Ensure that the time is also sent in <A HREF=#begin_task>BEGIN_TASK</A> to avoid appearance of time travel...<br>
 
 </TD></TR>
 </TABLE>
@@ -770,7 +756,6 @@ end_all_tasks
 <PRE CLASS="DECL_TEXT">
 Procedure end_all_tasks(p_error_num IN PLS_INTEGER DEFAULT 0,
                         p_end_time  in TIMESTAMP default null)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; end_all_tasks &gt;<br>
@@ -819,12 +804,11 @@ get_version
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_version RETURN NUMBER
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; Get_Version&gt;<br>
 &nbsp;<br>
-&nbsp;&nbsp; Returns the current version of the HOTSOS_ILO Suite that is currently installed.<br>
+&nbsp;&nbsp; Returns the current version of the ILO Suite that is currently installed.<br>
 
 <BR>
 </P>
@@ -835,7 +819,7 @@ Examples
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-To get the current version of the <A HREF="../HOTSOS/Hotsos_Ilo_Task.html">HOTSOS_ILO_TASK</A> package <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp; DECLARE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v_version number;<br>&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v_version := <A HREF="../HOTSOS/Hotsos_Ilo_Task.html#get_version">hotsos_ilo_task.get_version</A>();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE(to_char(v_version));<br>&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
+To get the current version of the ILO_TASK package <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp; DECLARE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v_version number;<br>&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v_version := ilo_task.get_version();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE(to_char(v_version));<br>&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
 
 </TD></TR>
 </TABLE>
@@ -847,7 +831,7 @@ Usage Notes
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<li>You can call this directly to return the version of <A HREF="../HOTSOS/Hotsos_Ilo_Task.html">HOTSOS_ILO_TASK</A>.<br>
+<li>You can call this directly to return the version of ILO_TASK.<br>
 
 </TD></TR>
 </TABLE>
