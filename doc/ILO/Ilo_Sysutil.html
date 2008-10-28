@@ -2,23 +2,23 @@
 <HTML>
  <HEAD>
  <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
- <TITLE>Package HOTSOS.Hotsos_Sysutil</TITLE>
+ <TITLE>Package Ilo_Sysutil</TITLE>
  <META name="object" content="PACKAGE">
- <META name="name" content="HOTSOS.Hotsos_Sysutil">
+ <META name="name" content="ILO.Ilo_Sysutil">
  <META name="description" content="Provides several utility functions and wraps calls to SYS.DBMS_SYSTEM.KSDDDT and SYS.DBMS_SYSTEM.KSDWRT.">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
-<TD><P ALIGN="LEFT"><STRONG><SMALL>HOTSOS</SMALL></STRONG></TD>
+<TD><P ALIGN="LEFT"><STRONG><SMALL>ILO</SMALL></STRONG></TD>
 <TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
-<P CLASS="MAIN_TITLE">Package HOTSOS.Hotsos_Sysutil</P>
+<P CLASS="MAIN_TITLE">Package Ilo_Sysutil</P>
 Provides several utility functions and wraps calls to SYS.DBMS_SYSTEM.KSDDDT and SYS.DBMS_SYSTEM.KSDWRT.<br>
 &nbsp;<br>
 &nbsp;<br>
 &nbsp;Instrumentation Library for Oracle<br>
-&nbsp;Copyright (C) 2006 - 2008&nbsp; Method&nbsp;R Corporation. All rights reserved.<br>
+&nbsp;Copyright (C) 2006 - 2008&nbsp; Method R Corporation. All rights reserved.<br>
 &nbsp;<br>
 &nbsp;This library is free software; you can redistribute it and/or<br>
 &nbsp;modify it under the terms of the GNU Lesser General Public<br>
@@ -181,13 +181,12 @@ get_version
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_version RETURN NUMBER
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_version &gt;<br>
 &nbsp;<br>
 &nbsp;<br>
-&nbsp; Purpose: Returns the version of the HOTSOS_SYSUTIL PACKAGE<br>
+&nbsp; Purpose: Returns the version of the ILO_SYSUTIL package<br>
 
 <BR>
 </P>
@@ -210,7 +209,6 @@ get_db_major_ver
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_db_major_ver RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; Get_DB_Major_Ver &gt;<br>
@@ -232,7 +230,6 @@ write_datestamp
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure write_datestamp
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; write_datestamp &gt;<br>
@@ -251,7 +248,6 @@ write_to_trace
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure write_to_trace(text IN VARCHAR2)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; Write_to_trace &gt;<br>
@@ -270,7 +266,6 @@ write_to_alert
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure write_to_alert(text IN VARCHAR2)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; Write_to_alert &gt;<br>
@@ -288,7 +283,6 @@ turn_trace_on
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure turn_trace_on
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; turn_trace_on &gt;<br>
@@ -306,7 +300,6 @@ turn_trace_off
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure turn_trace_off
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; turn_trace_off &gt;<br>
@@ -324,7 +317,6 @@ get_client_id
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_client_id RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_client_id &gt;<br>
@@ -342,7 +334,6 @@ set_client_id
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure set_client_id(text IN VARCHAR2)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; set_client_id &gt;<br>
@@ -360,7 +351,6 @@ get_spid
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_spid RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_spid &gt;<br>
@@ -378,7 +368,6 @@ get_session_type
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_session_type RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_session_type &gt;<br>
@@ -396,7 +385,6 @@ get_instance_name
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_instance_name RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_Instance_name &gt;<br>
@@ -414,7 +402,6 @@ get_service_name
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_service_name RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_service_name &gt;<br>
@@ -432,7 +419,6 @@ get_session_user
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_session_user RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_session_user &gt;<br>
@@ -450,7 +436,6 @@ get_ip_address
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_ip_address RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_ip_address &gt;<br>
@@ -468,12 +453,11 @@ get_terminal
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_terminal RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_terminal &gt;<br>
 &nbsp;<br>
-&nbsp; Purpose: Gets terminalr for current session<br>
+&nbsp; Purpose: Gets terminal for current session<br>
 &nbsp;<br>
 &nbsp; comments<br>
 
@@ -486,7 +470,6 @@ get_session_id
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_session_id RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_session_id &gt;<br>
@@ -504,7 +487,6 @@ get_os_user
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_os_user RETURN VARCHAR2
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_os_user &gt;<br>
@@ -522,7 +504,6 @@ register
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure register(p_name IN varchar2)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; Register &gt;<br>
@@ -543,12 +524,11 @@ Procedure waitany(p_name    OUT varchar2,
                   p_message OUT varchar2,
                   p_status  OUT number,
                   p_timeout IN number)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; waitany &gt;<br>
 &nbsp;<br>
-&nbsp; Purpose: Wraps the DBMS_ALER.WAITANY procedure<br>
+&nbsp; Purpose: Wraps the DBMS_ALERT.WAITANY procedure<br>
 &nbsp;<br>
 &nbsp; comments<br>
 
@@ -564,12 +544,11 @@ Procedure waitone(p_name    IN varchar2,
                   p_message OUT varchar2,
                   p_status  OUT number,
                   p_timeout IN number)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; waitone &gt;<br>
 &nbsp;<br>
-&nbsp; Purpose: Wraps the DBMS_ALER.WAITONE procedure<br>
+&nbsp; Purpose: Wraps the DBMS_ALERT.WAITONE procedure<br>
 &nbsp;<br>
 &nbsp; comments<br>
 
@@ -582,7 +561,6 @@ SIGNAL
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure SIGNAL(p_name IN varchar2, p_message IN varchar2)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; signal &gt;<br>
@@ -600,7 +578,6 @@ remove
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure remove(p_name IN varchar2)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; remove &gt;<br>
@@ -618,7 +595,6 @@ removeall
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure removeall
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; removeall &gt;<br>
@@ -636,7 +612,6 @@ set_raise_exceptions
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure set_raise_exceptions(raise_exceptions boolean)
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; set_raise_exceptions &gt;<br>
@@ -681,7 +656,6 @@ get_raise_exceptions
 </P>
 <PRE CLASS="DECL_TEXT">
 Function get_raise_exceptions RETURN boolean
-
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_raise_exceptions &gt;<br>
