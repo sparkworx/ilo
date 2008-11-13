@@ -1,3 +1,12 @@
+Release Notes - ILO: 2.1.1
+
+1998857: Use autonomous transactions to avoid implicit commits (2190)
+	The DBMS_ALERT functions which are wrapped in ILO_SYSUTIL are now wrapped with
+	the PRAGMA AUTONOMOUS_TRANSACTION to avoid implicit commits being passed along
+	to the calling application. These functions were called only by the SLA Manager
+	extension, which wrapped them in the calls, but the pragmas belong at this level.
+	Explicit commits were added for correct functionality.
+
 Release Notes - ILO: 2.1
 
 2184883: Report per widget (normalized) response time cost
