@@ -586,6 +586,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
      PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN
       dbms_alert.register(p_name);
+      commit;
    EXCEPTION
       WHEN OTHERS THEN
          if get_raise_exceptions then 
@@ -608,6 +609,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
      PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN
       dbms_alert.WAITANY(p_name, p_message, p_status, p_timeout);
+      commit;
    EXCEPTION
       WHEN OTHERS THEN
          if get_raise_exceptions then 
@@ -629,6 +631,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
      PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN
       dbms_alert.waitone(p_name, p_message, p_status, p_timeout);
+      commit;
    EXCEPTION
       WHEN OTHERS THEN
          if get_raise_exceptions then 
@@ -670,6 +673,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
      PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN
       dbms_alert.remove(p_name);
+      commit;
    EXCEPTION
       WHEN OTHERS THEN
          if get_raise_exceptions then 
@@ -691,6 +695,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
      PRAGMA AUTONOMOUS_TRANSACTION;
    BEGIN
       dbms_alert.removeall;
+      commit;
    EXCEPTION
       WHEN OTHERS THEN
          if get_raise_exceptions then 
