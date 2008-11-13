@@ -74,7 +74,7 @@ select :tnsalias tempalias from dual;
 
 rem set the version variable for use in packages
 column iloversion new_value ilo_version
-select '2.1' iloversion from dual;
+select '2.1.1' iloversion from dual;
 
 rem get the database version for use in ILO_SYSUTIL package
 VARIABLE g_db_major_ver varchar2(64);
