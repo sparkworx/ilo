@@ -72,9 +72,9 @@ rem create the tnsalias subst variable for usage in connect later on
 column tempalias new_value tnsalias
 select :tnsalias tempalias from dual;
 
-rem set the version variable for use in packages
+rem set the version variable for use in packages, must be NUMBER datatype, x.y
 column iloversion new_value ilo_version
-select '2.1.1' iloversion from dual;
+select '2.2' iloversion from dual;
 
 rem get the database version for use in ILO_SYSUTIL package
 VARIABLE g_db_major_ver varchar2(64);

@@ -1,3 +1,9 @@
+Release Notes - ILO: 2.2
+
+2393284: Correct version number incompatibility
+	The packages were not written to handle version numbers of form x.y.z.
+	Correctly identify latest version as 2.2 instead of 2.1.1.
+
 Release Notes - ILO: 2.1.1
 
 1998857: Use autonomous transactions to avoid implicit commits (2190)
