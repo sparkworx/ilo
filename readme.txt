@@ -134,6 +134,7 @@ How stable are the ILO package definitions?
   in the following packages:
 
 	- ILO_SYSUTIL
+	- ILO_UTIL
 	- ILO_TIMER
 
   And we reserve the right to alter the implementation details for any package

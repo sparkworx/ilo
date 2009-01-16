@@ -1,3 +1,12 @@
+Release Notes - ILO: 2.3
+
+2418419: Add set_raise_exceptions to ilo_util
+	Add set_raise_exceptions and get_raise_exceptions to ilo_util, since the end user will
+	need to do this and public execute privilege is not granted on the ilo_sysutil package.
+				
+2418388: Add silent install scripts
+	Add silent install scripts for convenience in integrating with existing application installs.
+
 Release Notes - ILO: 2.2
 
 2393284: Correct version number incompatibility
