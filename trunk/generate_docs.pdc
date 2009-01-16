@@ -1,6 +1,8 @@
 -- Command Window batch file for PL/SQL Developer with plsqldoc plugin
 -- connect as ILO schema owner to run this script
 
+plugin plsqldoc generate ilo_util
+plugin plsqldoc generate body ilo_util
 plugin plsqldoc generate ilo_sysutil
 plugin plsqldoc generate body ilo_sysutil
 plugin plsqldoc generate ilo_task

@@ -279,6 +279,10 @@ CREATE OR REPLACE PACKAGE Ilo_Sysutil AS
    ---------------------------------------------------------------------
    --< set_raise_exceptions >
    ---------------------------------------------------------------------
+   --
+   --  DEPRECATED AS OF 2.3 - use ilo_util.get_raise_exceptions instead 
+   --
+   --
    --  Purpose: Normally, ILO will supress any exceptions raised during it's execution so that any instrumented application
    --  won't be adversely affected by an error that might occur while processing ILO. This flag actually tells ILO to raise
    --  any exceptions that it hits. This is probably most useful for testing purposes, but might have its advantages in a
@@ -294,6 +298,10 @@ CREATE OR REPLACE PACKAGE Ilo_Sysutil AS
    ---------------------------------------------------------------------
    --< get_raise_exceptions >
    ---------------------------------------------------------------------
+   --
+   --  DEPRECATED AS OF 2.3 - use ilo_util.get_raise_exceptions instead 
+   --
+   --
    --  Return the current value for RAISE_EXCEPTIONS. 
    --
    --   %param None

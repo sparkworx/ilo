@@ -61,7 +61,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Timer AS
       RETURN NULL;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -92,7 +92,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Timer AS
       NULL;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             NULL;
@@ -113,7 +113,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Timer AS
       RETURN &&ilo_version;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -132,7 +132,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Timer AS
      null;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             NULL;
@@ -182,7 +182,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Timer AS
       END IF;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN;
@@ -204,7 +204,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Timer AS
      NULL;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             NULL;
@@ -238,7 +238,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Timer AS
       g_ignore_schedule := NVL (ignore_schedule, g_ignore_schedule);
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
 	    raise;
 	 else
             NULL;
@@ -265,7 +265,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Timer AS
       RETURN g_all_interesting;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
 	    raise;
 	 else
             RETURN NULL;
@@ -292,7 +292,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Timer AS
       RETURN g_ignore_schedule;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
 	    raise;
 	 else
             RETURN NULL;
@@ -303,7 +303,7 @@ BEGIN
     refresh_schedule;
 EXCEPTION
    WHEN OTHERS THEN
-      if ilo_sysutil.get_raise_exceptions then 
+      if ilo_util.get_raise_exceptions then 
          raise;
       else
          NULL;

@@ -36,10 +36,12 @@ PROMPT
 PROMPT * For version 2.1 and later
 PROMPT
 PROMPT * Package ILO_SYSUTIL 
+PROMPT * Package ILO_UTIL 
 PROMPT * Package ILO_TASK
 PROMPT * Package ILO_TIMER
 PROMPT
 PROMPT * Public Synonym ILO_SYSUTIL 
+PROMPT * Public Synonym ILO_UTIL 
 PROMPT * Public Synonym ILO_TASK
 PROMPT * Public Synonym ILO_TIMER
 PROMPT
@@ -155,6 +157,7 @@ begin
   drop_public_synonym('ilo_task');
   drop_public_synonym('ilo_timer');
   drop_public_synonym('ilo_sysutil');
+  drop_public_synonym('ilo_util');
 end;
 /
 PROMPT
@@ -186,6 +189,11 @@ end;
 /
 begin
   execute immediate 'revoke execute on &&h_user..ILO_SYSUTIL from PUBLIC';
+exception when others then null;
+end;
+/
+begin
+  execute immediate 'revoke execute on &&h_user..ILO_UTIL from PUBLIC';
 exception when others then null;
 end;
 /
@@ -222,6 +230,7 @@ begin
   drop_package('&&h_user..ILO_TIMER');
   drop_package('&&h_user..ILO_TASK');
   drop_package('&&h_user..ILO_SYSUTIL');
+  drop_package('&&h_user..ILO_UTIL');
 end;
 /
 PROMPT

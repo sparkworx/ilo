@@ -50,7 +50,6 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
    g_ip_address    VARCHAR2(15);
    g_session_id	   VARCHAR2(64);
    g_os_user	   VARCHAR2(64);
-   g_raise_exceptions BOOLEAN := FALSE;
    
    ---------------------------------------------------------------------
    --< PRIVATE METHODS >------------------------------------------------
@@ -108,7 +107,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
       RETURN &&ilo_version;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -707,6 +706,10 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
    ---------------------------------------------------------------------
    --< set_raise_exceptions >
    ---------------------------------------------------------------------
+   --
+   --  DEPRECATED AS OF 2.3 - use ilo_util.get_raise_exceptions instead 
+   --
+   --
    --  Purpose: Normally, ILO will supress any exceptions raised during it's execution so that any instrumented application
    --  won't be adversely affected by an error that might occur while processing ILO. This flag actually tells ILO to raise
    --  any exceptions that it hits. This is probably most useful for testing purposes, but might have its advantages in a
@@ -721,7 +724,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
    PROCEDURE set_raise_exceptions(raise_exceptions boolean)
    IS
    BEGIN
-      g_raise_exceptions := NVL (raise_exceptions, g_raise_exceptions);
+      ilo_util.set_raise_exceptions(raise_exceptions);
    EXCEPTION
       WHEN OTHERS THEN
          NULL;
@@ -730,6 +733,10 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
    ---------------------------------------------------------------------
    --< get_raise_exceptions >
    ---------------------------------------------------------------------
+   --
+   --  DEPRECATED AS OF 2.3 - use ilo_util.get_raise_exceptions instead 
+   --
+   --
    --  Return the current value for RAISE_EXCEPTIONS. 
    --
    --   %param None
@@ -743,7 +750,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
    FUNCTION get_raise_exceptions RETURN boolean
       IS
    BEGIN
-      RETURN g_raise_exceptions;
+      RETURN ilo_util.get_raise_exceptions;
    EXCEPTION
       WHEN OTHERS THEN
          RETURN FALSE;

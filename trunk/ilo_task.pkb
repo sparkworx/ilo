@@ -73,7 +73,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       RETURN REPLACE (p_string, ']', '\]');
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -99,7 +99,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       g_is_apps := NVL (is_apps, g_is_apps);
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             NULL;
@@ -125,7 +125,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       RETURN g_is_apps;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -150,7 +150,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
      NULL;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             NULL;
@@ -180,7 +180,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       RETURN 0;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN 0;
@@ -206,7 +206,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
      ILO_TIMER.SET_MARK_ALL_TASKS_INTERESTING(TRACE,TRACE);
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             NULL;
@@ -235,7 +235,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       write_wall_time := g_write_wall_time;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             NULL;
@@ -261,7 +261,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       RETURN g_trace;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -287,7 +287,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       RETURN g_write_wall_time;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -493,7 +493,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
          END IF;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             NULL;
@@ -543,7 +543,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       END IF;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -590,7 +590,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       RETURN g_stack;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -734,7 +734,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       END IF;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             NULL;
@@ -769,7 +769,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       END IF;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             NULL;
@@ -803,7 +803,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
       RETURN &&ilo_version;
    EXCEPTION
       WHEN OTHERS THEN
-         if ilo_sysutil.get_raise_exceptions then 
+         if ilo_util.get_raise_exceptions then 
             raise;
          else
             RETURN NULL;
@@ -826,7 +826,7 @@ BEGIN
 EXCEPTION
    WHEN OTHERS
    THEN
-      if ilo_sysutil.get_raise_exceptions then 
+      if ilo_util.get_raise_exceptions then 
          raise;
       else
          NULL;

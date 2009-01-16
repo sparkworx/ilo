@@ -23,14 +23,16 @@ PROMPT
 PROMPT Objects Installed:
 PROMPT
 PROMPT * Package ILO_SYSUTIL 
+PROMPT * Package ILO_UTIL 
 PROMPT * Package ILO_TASK
 PROMPT * Package ILO_TIMER
 PROMPT
 PROMPT * Public Synonym ILO_SYSUTIL 
+PROMPT * Public Synonym ILO_UTIL 
 PROMPT * Public Synonym ILO_TASK
 PROMPT * Public Synonym ILO_TIMER
 PROMPT
-PROMPT * Execute privileges are granted to PUBLIC for these packages
+PROMPT * Execute privileges are granted to PUBLIC for all packages except ILO_SYSUTIL
 PROMPT
 PROMPT For more information, consult the readme.txt file.
 PROMPT
@@ -74,7 +76,7 @@ select :tnsalias tempalias from dual;
 
 rem set the version variable for use in packages, must be NUMBER datatype, x.y
 column iloversion new_value ilo_version
-select '2.2' iloversion from dual;
+select '2.3' iloversion from dual;
 
 rem get the database version for use in ILO_SYSUTIL package
 VARIABLE g_db_major_ver varchar2(64);
@@ -231,6 +233,7 @@ declare
 begin
   create_public_synonym('ilo_task');
   create_public_synonym('ilo_timer');
+  create_public_synonym('ilo_util');
   create_public_synonym('ilo_sysutil');
   -- If upgrading from 2.0 or earlier, replace existing synonyms to handle the new naming convention.
   for rec in (select null from dba_synonyms
@@ -301,6 +304,14 @@ PROMPT =========================================================================
 PROMPT 
 PROMPT ... Connecting as &&h_user
 connect &&h_user/"&&h_pw&&tnsalias 
+PROMPT ... Installing ILO_UTIL Package Spec
+@ilo_util.pks
+/
+show errors;
+PROMPT ... Installing ILO_UTIL Package Body
+@ilo_util.pkb
+/
+show errors;
 PROMPT ... Installing ILO_SYSUTIL Package Spec
 @ilo_sysutil.pks
 /
@@ -328,6 +339,7 @@ show errors;
 PROMPT ... Granting EXECUTE privs on packages to PUBLIC
 grant execute on ILO_TASK to PUBLIC;
 grant execute on ILO_TIMER to PUBLIC;
+grant execute on ILO_UTIL to PUBLIC;
 PROMPT
 PROMPT =========================================================================
 PROMPT Installation of ILO complete.
