@@ -540,6 +540,33 @@ Procedure begin_task(module     IN VARCHAR2 DEFAULT NULL,
 &lt; begin_task &gt;<br>
 &nbsp;<br>
 &nbsp;&nbsp; Mark the beginning of an instrumented task.<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp; %examples<br>
+&nbsp;&nbsp; Here is an instrumented block from an HR application:<BR>
+&nbsp;&nbsp; <CODE><br>
+&nbsp;&nbsp;&nbsp;&nbsp; CREATE or replace PROCEDURE add_employee(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name VARCHAR2,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salary NUMBER,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; manager NUMBER,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; title VARCHAR2,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission NUMBER,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; department NUMBER) AS<br>
+&nbsp;&nbsp;&nbsp;&nbsp; BEGIN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.BEGIN_TASK(module =&gt; 'Human Resources', action =&gt; 'Adding Employees');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO emp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ename, empno, sal, mgr, job, hiredate, comm, deptno)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (name, emp_seq.nextval, salary, manager, title, SYSDATE,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission, department);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; EXCEPTION<br>
+&nbsp;&nbsp;&nbsp;&nbsp; WHEN OTHERS<br>
+&nbsp;&nbsp;&nbsp;&nbsp; THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('Exception thrown');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK(error_num =&gt;SQLCODE);<br>
+&nbsp;&nbsp;&nbsp;&nbsp; END;<br>
+&nbsp;&nbsp; </CODE><BR>
 
 <BR>
 </P>
@@ -585,18 +612,6 @@ The (optional) begin time for the task.<br>
 </TD></TR>
 </TABLE>
 <BR>
-<A NAME="Examples"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Examples
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Here is an instrumented block from an HR application:<BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CREATE or replace PROCEDURE add_employee(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salary NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; manager NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; title VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; department NUMBER) AS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.BEGIN_TASK(module =&gt; 'Human Resources', action =&gt; 'Adding Employees');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO emp<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ename, empno, sal, mgr, job, hiredate, comm, deptno)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (name, emp_seq.nextval, salary, manager, title, SYSDATE,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission, department);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXCEPTION<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN OTHERS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('Exception thrown');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK(error_num =&gt;SQLCODE);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
-
-</TD></TR>
-</TABLE>
-<BR>
 <A NAME="Usage Notes"></A>
 <TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
 Usage Notes
@@ -621,21 +636,30 @@ Function get_current_task RETURN stack_rec_t
 &lt; Get_current_task&gt;<br>
 &nbsp;<br>
 &nbsp;&nbsp; Return a record representing the current task context.<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp; %examples<br>
+&nbsp;&nbsp; To print out the value of the current record: <BR>
+&nbsp;&nbsp; <CODE><br>
+&nbsp;&nbsp; DECLARE<br>
+&nbsp;&nbsp;&nbsp;&nbsp; l_record ILO_TASK.stack_rec_t;<br>
+&nbsp;&nbsp; BEGIN<br>
+&nbsp;&nbsp;&nbsp;&nbsp; l_record := ILO_TASK.GET_CURRENT_TASK();<br>
+&nbsp;&nbsp;&nbsp;&nbsp; IF l_record.module IS NOT NULL THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('sequence =&gt;'&nbsp;&nbsp;&nbsp;&nbsp; || l_record.sequence<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', module =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_record.module<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', action =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_record.action<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', client_id =&gt;'&nbsp;&nbsp;&nbsp; || l_record.client_id<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', comment =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_record.comment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', widgets =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_record.widget_count);<br>
+&nbsp;&nbsp;&nbsp;&nbsp; ELSE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('The record contains no values');<br>
+&nbsp;&nbsp;&nbsp;&nbsp; END IF;<br>
+&nbsp;&nbsp; END;<br>
+&nbsp;&nbsp; </CODE><BR>
 
 <BR>
 </P>
-<A NAME="Examples"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Examples
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-To print out the value of the current record: <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp; DECLARE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_record ILO_TASK.stack_rec_t;<br>&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_record := ILO_TASK.GET_CURRENT_TASK();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IF l_record.module IS NOT NULL THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('sequence =&gt;'&nbsp;&nbsp;&nbsp;&nbsp; || l_record.sequence<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', module =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_record.module<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', action =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_record.action<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', client_id =&gt;'&nbsp;&nbsp;&nbsp; || l_record.client_id<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', comment =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_record.comment<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', widgets =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_record.widget_count);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('The record contains no values');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END IF;<br>&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
-
-</TD></TR>
-</TABLE>
-<BR>
 <A NAME="Usage Notes"></A>
 <TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
 Usage Notes
@@ -660,21 +684,32 @@ Function get_task_stack RETURN ilo_task.stack_t
 &lt; Get_task_stack&gt;<br>
 &nbsp;<br>
 &nbsp;&nbsp; Return a list of records representing all the currently active task contexts. There will be more than one record returned when nested tasks are active.<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp; %examples<br>
+&nbsp;&nbsp; To print out all values in the current stack: <BR>
+&nbsp;&nbsp; <CODE><br>
+&nbsp;&nbsp; DECLARE<br>
+&nbsp;&nbsp;&nbsp;&nbsp; l_list ILO_TASK.stack_t;<br>
+&nbsp;&nbsp; BEGIN<br>
+&nbsp;&nbsp;&nbsp;&nbsp; l_list := ILO_TASK.GET_TASK_STACK();<br>
+&nbsp;&nbsp;&nbsp;&nbsp; IF l_list.count &gt; 0 THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FOR i in 1 .. l_list.count LOOP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('sequence =&gt;'&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).sequence<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', module =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).module<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', action =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).action<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', client_id =&gt;'&nbsp;&nbsp;&nbsp; || l_list(i).client_id<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', comment =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).comment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', widgets =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).widget_count);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END LOOP;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; ELSE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('No elements in the collection');<br>
+&nbsp;&nbsp;&nbsp;&nbsp; END IF;<br>
+&nbsp;&nbsp; END;<br>
+&nbsp;&nbsp; </CODE><BR>
 
 <BR>
 </P>
-<A NAME="Examples"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Examples
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-To print out all values in the current stack: <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp; DECLARE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_list ILO_TASK.stack_t;<br>&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l_list := ILO_TASK.GET_TASK_STACK();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IF l_list.count &gt; 0 THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FOR i in 1 .. l_list.count LOOP<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('sequence =&gt;'&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).sequence<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', module =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).module<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', action =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).action<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', client_id =&gt;'&nbsp;&nbsp;&nbsp; || l_list(i).client_id<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', comment =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).comment<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || ', widgets =&gt;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; || l_list(i).widget_count);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END LOOP;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('No elements in the collection');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END IF;<br>&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
-
-</TD></TR>
-</TABLE>
-<BR>
 <A NAME="Usage Notes"></A>
 <TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
 Usage Notes
@@ -701,6 +736,33 @@ Procedure end_task(error_num    IN PLS_INTEGER DEFAULT 0,
 &lt; end_task &gt;<br>
 &nbsp;<br>
 &nbsp;&nbsp; Mark the end of an instrumented task.<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp; %examples<br>
+&nbsp;&nbsp; An example would be a procedure used in the HR application to add employees: <BR>
+&nbsp;&nbsp; <CODE><br>
+&nbsp;&nbsp;&nbsp;&nbsp; CREATE or replace PROCEDURE add_employee(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name VARCHAR2,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salary NUMBER,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; manager NUMBER,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; title VARCHAR2,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission NUMBER,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; department NUMBER) AS<br>
+&nbsp;&nbsp;&nbsp;&nbsp; BEGIN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.BEGIN_TASK(module =&gt; 'Human Resources', action =&gt; 'Adding Employees');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO emp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ename, empno, sal, mgr, job, hiredate, comm, deptno)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (name, emp_seq.nextval, salary, manager, title, SYSDATE,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission, department);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; EXCEPTION<br>
+&nbsp;&nbsp;&nbsp;&nbsp; WHEN OTHERS<br>
+&nbsp;&nbsp;&nbsp;&nbsp; THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('Exception thrown');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK(error_num =&gt;SQLCODE);<br>
+&nbsp;&nbsp;&nbsp;&nbsp; END;<br>
+&nbsp;&nbsp; </CODE><BR>
 
 <BR>
 </P>
@@ -728,18 +790,6 @@ The (optional) end time for the task.<br>
 widget_count&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 The (optional) widget count for the task.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Examples"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Examples
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-An example would be a procedure used in the HR application to add employees: <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CREATE or replace PROCEDURE add_employee(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salary NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; manager NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; title VARCHAR2,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission NUMBER,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; department NUMBER) AS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.BEGIN_TASK(module =&gt; 'Human Resources', action =&gt; 'Adding Employees');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO emp<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ename, empno, sal, mgr, job, hiredate, comm, deptno)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (name, emp_seq.nextval, salary, manager, title, SYSDATE,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commission, department);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXCEPTION<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN OTHERS<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('Exception thrown');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILO_TASK.END_TASK(error_num =&gt;SQLCODE);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
 
 </TD></TR>
 </TABLE>
@@ -817,21 +867,21 @@ Function get_version RETURN NUMBER
 &lt; Get_Version&gt;<br>
 &nbsp;<br>
 &nbsp;&nbsp; Returns the current version of the ILO Suite that is currently installed.<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp; %examples<br>
+&nbsp;&nbsp; To get the current version of the ILO_TASK package <BR>
+&nbsp;&nbsp; <CODE><br>
+&nbsp;&nbsp; DECLARE<br>
+&nbsp;&nbsp;&nbsp;&nbsp; v_version number;<br>
+&nbsp;&nbsp; BEGIN<br>
+&nbsp;&nbsp;&nbsp;&nbsp; v_version := ilo_task.get_version();<br>
+&nbsp;&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE(to_char(v_version));<br>
+&nbsp;&nbsp; END;<br>
+&nbsp;&nbsp; </CODE><BR>
 
 <BR>
 </P>
-<A NAME="Examples"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Examples
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-To get the current version of the ILO_TASK package <BR>&nbsp;&nbsp;&nbsp; <CODE><br>&nbsp;&nbsp;&nbsp; DECLARE<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v_version number;<br>&nbsp;&nbsp;&nbsp; BEGIN<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v_version := ilo_task.get_version();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE(to_char(v_version));<br>&nbsp;&nbsp;&nbsp; END;<br> </CODE><BR>
-
-</TD></TR>
-</TABLE>
-<BR>
 <A NAME="Usage Notes"></A>
 <TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
 Usage Notes
