@@ -244,11 +244,6 @@ Naming Standards
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#g_raise_exceptions">g_raise_exceptions</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
 </TABLE>
 <BR>
 <HR>
@@ -363,14 +358,6 @@ g_os_user
 </P>
 <PRE CLASS="DECL_TEXT">
 g_os_user       VARCHAR2(64);
-</PRE>
-<HR>
-<A NAME="g_raise_exceptions"></A>
-<P CLASS="TYPE_TITLE">
-g_raise_exceptions
-</P>
-<PRE CLASS="DECL_TEXT">
-g_raise_exceptions BOOLEAN := FALSE;
 </PRE>
 <HR>
 <A NAME="set_dbver"></A>
@@ -840,6 +827,10 @@ Procedure set_raise_exceptions(raise_exceptions boolean)
 <P CLASS="DESC_TEXT">
 &lt; set_raise_exceptions &gt;<br>
 &nbsp;<br>
+&nbsp;<br>
+&nbsp; DEPRECATED AS OF 2.3 - use ilo_util.get_raise_exceptions instead<br>
+&nbsp;<br>
+&nbsp;<br>
 &nbsp; Purpose: Normally, ILO will supress any exceptions raised during it's execution so that any instrumented application<br>
 &nbsp; won't be adversely affected by an error that might occur while processing ILO. This flag actually tells ILO to raise<br>
 &nbsp; any exceptions that it hits. This is probably most useful for testing purposes, but might have its advantages in a<br>
@@ -883,6 +874,10 @@ Function get_raise_exceptions RETURN boolean
 </PRE>
 <P CLASS="DESC_TEXT">
 &lt; get_raise_exceptions &gt;<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp; DEPRECATED AS OF 2.3 - use ilo_util.get_raise_exceptions instead<br>
+&nbsp;<br>
 &nbsp;<br>
 &nbsp; Return the current value for RAISE_EXCEPTIONS.<br>
 
