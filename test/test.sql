@@ -1,6 +1,10 @@
 set serveroutput on size 1000000
 spool test.log
 
+@ut_ilo_util.pks
+show errors
+@ut_ilo_util.pkb
+show errors
 @ut_ilo_sysutil.pks
 show errors
 @ut_ilo_sysutil.pkb
@@ -17,8 +21,9 @@ show errors
 declare
   v_result BOOLEAN;
 begin
-  ilo_sysutil.set_raise_exceptions(true);
   
+  v_result := ut_ilo_util.run_tests;
+
   v_result := ut_ilo_sysutil.run_tests;
   dbms_output.put_line(rpad('=',60,'='));
   dbms_output.put_line('*** Please verify that a trace file was generated with entries');
