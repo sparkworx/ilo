@@ -55,7 +55,8 @@ start ilo_install.tmp
 
 ACCEPT h_user char default ILO prompt '*** Enter the user you wish to own ILO [ilo]: '
 ACCEPT h_pw   char             prompt '*** Enter the password for this user: ' HIDE
-ACCEPT alias  char             prompt '*** Enter the TNS alias for this user: '
+                               prompt '*** If you used a TNS alias to connect to this database,' 
+ACCEPT alias  char             prompt '*** Please enter that TNS alias here: '
 
 VARIABLE tnsalias varchar2(2000);
 begin
