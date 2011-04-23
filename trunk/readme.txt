@@ -13,7 +13,7 @@ What is the Instrumentation Library for Oracle?
   
   All future maintenance and development of this software will be managed by
   Method R through the infrastructure at SourceForge. 
-  http://sourceforge.net/projects/hotsos-ilo
+  http://sourceforge.net/projects/ilo
   
 
 Why should I use ILO?
