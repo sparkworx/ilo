@@ -43,11 +43,11 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
    g_db_ver        VARCHAR2(64) := '&&g_db_ver';
    g_spid          VARCHAR2(12);
    g_session_type  VARCHAR2(255);
-   g_instance_name VARCHAR2(255);
+   g_instance_name sys.v_$instance.instance_name%TYPE;
    g_service_name  VARCHAR2(255);
    g_session_user  VARCHAR2(30);
    g_terminal      VARCHAR2(255);
-   g_ip_address    VARCHAR2(15);
+   g_ip_address    VARCHAR2(25);
    g_session_id	   VARCHAR2(64);
    g_os_user	   VARCHAR2(64);
    
@@ -275,7 +275,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
    ---------------------------------------------------------------------
    FUNCTION get_client_id RETURN VARCHAR2 IS
       v_os_user      VARCHAR2(64);
-      v_ip_address   VARCHAR2(20);
+      v_ip_address   VARCHAR2(25);
       v_program      VARCHAR2(200);
       v_service      VARCHAR2(20);
       v_client_id    VARCHAR2(200);
@@ -283,26 +283,26 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
    BEGIN
       -- See if a client_id has been previously set
       -- If the client_identifier is already set then just return the value.
-      v_client_id := SYS_CONTEXT('USERENV', 'CLIENT_IDENTIFIER');
+      v_client_id := SUBSTR(SYS_CONTEXT('USERENV', 'CLIENT_IDENTIFIER'),1,200);
       IF v_client_id IS NULL THEN
-         v_ip_address := NVL(get_ip_address, get_terminal );
+         v_ip_address := SUBSTR(NVL(get_ip_address, get_terminal),1,25);
 
          SELECT program
          INTO   v_program
          FROM   SYS.V_$SESSION
-         WHERE  audsid = TO_NUMBER(get_session_id)
+         WHERE  audsid = TO_NUMBER(SYS_CONTEXT('USERENV', 'SESSIONID'))
          AND    ROWNUM = 1;
 
-         v_os_user := get_os_user; -- SYS_CONTEXT('USERENV', 'OS_USER');
+         v_os_user := SUBSTR(get_os_user,1,64); -- SYS_CONTEXT('USERENV', 'OS_USER');
 
          IF v_db_major_ver >= 10 THEN
             -- 8 and 9 don't know about service_name
-            v_service   := get_service_name;
-            v_client_id := v_os_user || '~' || v_ip_address || '~' ||
-                           v_program || '~' || v_service;
+            v_service   := SUBSTR(get_service_name,1,20);
+            v_client_id := SUBSTR(v_os_user || '~' || v_ip_address || '~' ||
+                                  v_program || '~' || v_service,1,200);
          ELSE
-            v_client_id := v_os_user || '~' || v_ip_address || '~' ||
-                           v_program;
+            v_client_id := SUBSTR(v_os_user || '~' || v_ip_address || '~' ||
+                                  v_program,1,200);
          END IF;
 
       END IF;
@@ -487,7 +487,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
    FUNCTION get_ip_address RETURN VARCHAR2 IS
    BEGIN
    IF g_ip_address IS NULL THEN
-        g_ip_address := SYS_CONTEXT('USERENV', 'IP_ADDRESS');
+        g_ip_address := SUBSTR(SYS_CONTEXT('USERENV', 'IP_ADDRESS'),1,25);
    END IF;
 
    RETURN g_ip_address;
