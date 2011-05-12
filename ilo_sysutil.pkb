@@ -278,12 +278,12 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
       v_ip_address   VARCHAR2(25);
       v_program      VARCHAR2(200);
       v_service      VARCHAR2(20);
-      v_client_id    VARCHAR2(200);
+      v_client_id    VARCHAR2(64);
       v_db_major_ver VARCHAR2(5) := get_db_major_ver;
    BEGIN
       -- See if a client_id has been previously set
       -- If the client_identifier is already set then just return the value.
-      v_client_id := SUBSTR(SYS_CONTEXT('USERENV', 'CLIENT_IDENTIFIER'),1,200);
+      v_client_id := SUBSTR(SYS_CONTEXT('USERENV', 'CLIENT_IDENTIFIER'),1,64);
       IF v_client_id IS NULL THEN
          v_ip_address := SUBSTR(NVL(get_ip_address, get_terminal),1,25);
 
@@ -299,10 +299,10 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Sysutil AS
             -- 8 and 9 don't know about service_name
             v_service   := SUBSTR(get_service_name,1,20);
             v_client_id := SUBSTR(v_os_user || '~' || v_ip_address || '~' ||
-                                  v_program || '~' || v_service,1,200);
+                                  v_program || '~' || v_service,1,64);
          ELSE
             v_client_id := SUBSTR(v_os_user || '~' || v_ip_address || '~' ||
-                                  v_program,1,200);
+                                  v_program,1,64);
          END IF;
 
       END IF;

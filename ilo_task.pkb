@@ -45,7 +45,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
    g_stack             stack_t          := stack_t ();   -- The global stack.
    g_module            VARCHAR2 (32767);
    g_action            VARCHAR2 (32767);
-   g_client_id         VARCHAR2 (32767);
+   g_client_id         VARCHAR2 (64);
 
 -- TODO: Trace file ID / Filename --
 ---------------------------------------------------------------------
@@ -353,8 +353,8 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
    IS
       v_module           VARCHAR2 (500);
       v_action           VARCHAR2 (500);
-      v_client_id        VARCHAR2 (2000);
-      v_curr_client_id   VARCHAR2 (2000);
+      v_client_id        VARCHAR2 (64);
+      v_curr_client_id   VARCHAR2 (64);
       v_set_client_id    BOOLEAN         := FALSE;
       v_trace            BOOLEAN         := FALSE;
       v_write_wall_time  BOOLEAN         := FALSE;
@@ -412,7 +412,7 @@ CREATE OR REPLACE PACKAGE BODY Ilo_Task AS
          THEN
             -- If there is already a current value for client_id and we are not wanting to change it,
             -- then we should not waste time setting to the same value
-            v_curr_client_id := SYS_CONTEXT ('USERENV', 'CLIENT_IDENTIFIER');
+            v_curr_client_id := SUBSTR(SYS_CONTEXT ('USERENV', 'CLIENT_IDENTIFIER'),1,64);
 
             IF v_curr_client_id IS NULL
             THEN
@@ -822,7 +822,7 @@ BEGIN
    -- Remember Caller's Settings
    DBMS_APPLICATION_INFO.read_module (g_module, g_action);
 
-   g_client_id := SYS_CONTEXT ('USERENV', 'CLIENT_IDENTIFIER');
+   g_client_id := SUBSTR(SYS_CONTEXT ('USERENV', 'CLIENT_IDENTIFIER'),1,64);
 EXCEPTION
    WHEN OTHERS
    THEN
